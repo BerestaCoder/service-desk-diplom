@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Service Desk | Создание заявки</title>
+    <!-- Google Fonts + иконки Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static "css/styles.css" %}" />
+    <style>
+        /* карточка формы */
+        .form-card {
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        /* шапка с навигацией и пользователем */
+        .header-area {
+            padding: 22px 32px 16px 32px;
+            border-bottom: 1px solid #eef2f8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            background: #ffffff;
+        }
+
+        .logo-title h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #1e293b, #2d3a4e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* основное тело формы */
+        .form-body {
+            padding: 32px 36px 40px 36px;
+        }
+
+        /* группа полей */
+        .form-group {
+            margin-bottom: 32px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: #1f2a44;
+        }
+
+        .form-label i {
+            color: #3b82f6;
+            width: 22px;
+            font-size: 1.1rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 20px;
+            background: #ffffff;
+            transition: all 0.2s;
+            outline: none;
+            color: #0f172a;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        /* стиль для select */
+        select {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%234b5565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            background-size: 16px;
+        }
+
+        /* блок для фотографии */
+        .photo-upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 24px;
+            padding: 28px 20px;
+            text-align: center;
+            background: #fafdff;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .photo-upload-area:hover {
+            border-color: #3b82f6;
+            background: #f8fafc;
+        }
+
+        .photo-icon {
+            font-size: 2.5rem;
+            color: #6c86a3;
+            margin-bottom: 12px;
+        }
+
+        .photo-upload-area p {
+            font-size: 0.9rem;
+            color: #4b5565;
+            font-weight: 500;
+        }
+
+        .photo-hint {
+            font-size: 0.75rem;
+            color: #7e8b9e;
+            margin-top: 8px;
+        }
+
+        .file-input-hidden {
+            display: none;
+        }
+
+        /* кнопка регистрации */
+        .register-btn-wrapper {
+            margin-top: 36px;
+            text-align: right;
+        }
+
+        .btn-register {
+            background: #2563eb;
+            border: none;
+            padding: 14px 34px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: inherit;
+            box-shadow: 0 2px 6px rgba(37,99,235,0.2);
+        }
+
+        .btn-register:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(37,99,235,0.25);
+        }
+
+        /* дополнительный блок с примечанием о скриншотах */
+        .note-screenshots {
+            background: #fefce8;
+            border-left: 4px solid #eab308;
+            padding: 14px 20px;
+            border-radius: 18px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: #854d0e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* адаптив */
+        @media (max-width: 760px) {
+            body {
+                padding: 20px 16px;
+            }
+            .form-body {
+                padding: 24px 20px;
+            }
+            .header-area {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .btn-register {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* небольшие стили для сообщения об успехе */
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            backdrop-filter: blur(4px);
+            transition: opacity 0.2s;
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="header-nav">
+        <div class="logo-area">
+            <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
+        </div>
+        <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+            <div class="nav-links-mini">
+                <a href="{% url 'home' %}"><i class="fas fa-home"></i> Главная</a>
+                <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
+                <a href="{% url 'diagram' %}"><i class="fas fa-chart-line"></i> Отчеты</a>
+                <a href="#"><i class="fas fa-sliders-h"></i> Настройки</a>
+            </div>
+            <div class="user-greeting">
+                <i class="fas fa-user-circle"></i>
+                <span>Иванов И.И.</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="form-card">
+        <!-- Шапка: Service Desk + создание заявки и пользователь -->
+        <div class="header-area">
+            <div class="logo-title">
+                <h1><i class="fas fa-pen-alt" style="margin-right: 6px;"></i> Создание заявки</h1>
+            </div>
+        </div>
+
+        <!-- Форма создания заявки -->
+        <div class="form-body">
+            <!-- поле Тема -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-heading"></i> Тема
+                </div>
+                <input type="text" id="topicInput" placeholder="Название темы" value="Проблема с компьютером">
+            </div>
+
+            <!-- Приоритет (выпадающий список) -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-flag"></i> Приоритет
+                </div>
+                <select id="prioritySelect">
+                    <option value="Низкий">Низкий</option>
+                    <option value="Средний" selected>Средний</option>
+                    <option value="Высокий">Высокий</option>
+                    <option value="Критический">Критический</option>
+                </select>
+            </div>
+
+            <!-- Описание проблемы -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-align-left"></i> Описание
+                </div>
+                <textarea id="descriptionText" placeholder="Опишите проблему подробно...">При попытке запуска приложения появляется сообщение об ошибке соединения с базой данных. Пользовательские сессии не сохраняются, отчеты не формируются.
+
+Снизу приложены скриншоты.</textarea>
+                <!-- заметка про скриншоты (в стиле макета) -->
+                <div class="note-screenshots">
+                    <i class="fas fa-camera"></i>
+                    <span>К заявлению можно приложить скриншоты (поддерживаются JPG, PNG).</span>
+                </div>
+            </div>
+
+            <!-- Блок добавления фотографии (drag & drop / клик) -->
+            <div class="form-group">
+                <div class="form-label">
+                    <i class="fas fa-image"></i> Добавить фотографию
+                </div>
+                <div class="photo-upload-area" id="photoUploadArea">
+                    <div class="photo-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <p><strong>Нажмите или перетащите файл</strong></p>
+                    <p class="photo-hint">PNG, JPG, GIF до 10 МБ</p>
+                    <div id="fileListPreview" style="margin-top: 12px; font-size: 0.8rem; color: #2c5f8a;"></div>
+                </div>
+                <input type="file" id="fileInput" class="file-input-hidden" accept="image/*" multiple>
+            </div>
+
+            <!-- Кнопка регистрации -->
+            <div class="register-btn-wrapper">
+                <button class="btn-register" id="registerBtn">
+                    <i class="fas fa-check-circle"></i> Зарегистрировать
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Элементы DOM
+    const photoArea = document.getElementById('photoUploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileListPreview = document.getElementById('fileListPreview');
+    const registerBtn = document.getElementById('registerBtn');
+    const topicInput = document.getElementById('topicInput');
+    const prioritySelect = document.getElementById('prioritySelect');
+    const descriptionText = document.getElementById('descriptionText');
+
+    let selectedFiles = []; // храним выбранные файлы
+
+    // Открыть выбор файлов при клике на область
+    photoArea.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // Обработка выбора файлов
+    fileInput.addEventListener('change', (event) => {
+        const files = Array.from(event.target.files);
+        if (files.length > 0) {
+            // Добавляем новые файлы к существующим (не перезаписываем)
+            selectedFiles = [...selectedFiles, ...files];
+            updateFilePreview();
+        }
+        // очищаем value, чтобы можно было заново выбрать те же файлы, если надо
+        fileInput.value = '';
+    });
+
+    // Drag & Drop поддержка
+    photoArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        photoArea.style.borderColor = '#3b82f6';
+        photoArea.style.backgroundColor = '#f0f9ff';
+    });
+    photoArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        photoArea.style.borderColor = '#cbd5e1';
+        photoArea.style.backgroundColor = '#fafdff';
+    });
+    photoArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        photoArea.style.borderColor = '#cbd5e1';
+        photoArea.style.backgroundColor = '#fafdff';
+        const droppedFiles = Array.from(e.dataTransfer.files).filter(file => file.type.startsWith('image/'));
+        if (droppedFiles.length) {
+            selectedFiles = [...selectedFiles, ...droppedFiles];
+            updateFilePreview();
+        } else {
+            alert('Пожалуйста, загружайте только изображения (PNG, JPG и т.д.)');
+        }
+    });
+
+    // Обновление списка выбранных файлов в области
+    function updateFilePreview() {
+        if (selectedFiles.length === 0) {
+            fileListPreview.innerHTML = '';
+            return;
+        }
+        let html = `<div style="background:#eef2ff; border-radius: 16px; padding: 8px 12px; margin-top: 8px; text-align:left;">
+                        <i class="fas fa-paperclip"></i> <strong>${selectedFiles.length} файл(ов):</strong><br>`;
+        selectedFiles.forEach((file, idx) => {
+            html += `<span style="font-size:0.75rem; display:inline-block; background:white; border-radius:20px; padding:2px 10px; margin:3px 4px;">${file.name.substring(0, 25)}</span>`;
+        });
+        html += `<div style="margin-top: 6px;"><button type="button" id="clearFilesBtn" style="background:none; border:none; color:#2563eb; cursor:pointer; font-size:0.7rem;"><i class="fas fa-trash-alt"></i> Очистить все</button></div></div>`;
+        fileListPreview.innerHTML = html;
+        const clearBtn = document.getElementById('clearFilesBtn');
+        if (clearBtn) {
+            clearBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedFiles = [];
+                updateFilePreview();
+            });
+        }
+    }
+
+    // Функция регистрации заявки с проверками
+    function registerTicket() {
+        const topic = topicInput.value.trim();
+        const priority = prioritySelect.value;
+        const description = descriptionText.value.trim();
+
+        if (!topic) {
+            alert('Пожалуйста, укажите тему заявки');
+            topicInput.focus();
+            return;
+        }
+        if (!description) {
+            alert('Пожалуйста, заполните описание проблемы');
+            descriptionText.focus();
+            return;
+        }
+
+        // Собираем информацию о приложенных скриншотах
+        const filesCount = selectedFiles.length;
+        let filesInfo = '';
+        if (filesCount > 0) {
+            filesInfo = `, приложено изображений: ${filesCount} (${selectedFiles.map(f => f.name).join(', ')})`;
+        } else {
+            filesInfo = ', скриншоты не приложены (можно добавить позже)';
+        }
+
+        // Формируем сообщение об успешной регистрации (имитация отправки)
+        const successMsg = `✅ Заявка успешно зарегистрирована!\n\nТема: ${topic}\nПриоритет: ${priority}\nОписание: ${description.substring(0, 100)}${description.length > 100 ? '...' : ''}${filesInfo}\n\nНомер заявки: INC-${Math.floor(Math.random() * 90000) + 10000}`;
+        
+        // Показываем красивое всплывающее уведомление
+        showToast(successMsg);
+        
+        // Можно очистить форму или оставить для демонстрации. По желанию сбросим поле фото, но сохраним данные для демо?
+        // Логично очистить только при желании пользователя, но для удобства — оставим как есть, но выведем уведомление.
+        // В реальном проекте отправили бы на сервер.
+        
+        // Дополнительно: имитация сброса выбранных файлов после успешной регистрации (опционально)
+        // Раскомментируйте, если хотите автоочистку:
+        // selectedFiles = [];
+        // updateFilePreview();
+        // topicInput.value = '';
+        // descriptionText.value = '';
+        // но по заданию не требуется, поэтому просто показываем уведомление.
+    }
+
+    // Создаём всплывающий тост
+    function showToast(message) {
+        // удаляем предыдущий тост если есть
+        const existingToast = document.querySelector('.toast-msg');
+        if(existingToast) existingToast.remove();
+        
+        const toast = document.createElement('div');
+        toast.className = 'toast-msg';
+        toast.innerHTML = `<i class="fas fa-check-circle" style="color:#4ade80;"></i> ${message}`;
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                if(toast.parentNode) toast.remove();
+            }, 300);
+        }, 4000);
+    }
+
+    // Обработка клика по кнопке регистрации
+    registerBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        registerTicket();
+    });
+
+    // Для интерактива навигации - просто алерты, чтобы сохранить UX
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            if(link.innerText.includes('Создать заявку')) {
+                alert('Вы уже на странице создания заявки');
+            } else {
+                alert(`Навигация: ${link.innerText} (демонстрационный режим)`);
+            }
+        });
+    });
+    
+    // При клике на профиль тоже алерт
+    const userBlock = document.querySelector('.user-profile');
+    if(userBlock) {
+        userBlock.addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Иванов И.И. | Настройки профиля (демо)');
+        });
+    }
+</script>
+</body>
+</html>
+```

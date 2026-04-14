@@ -1,0 +1,389 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background: #f1f5f9;
+	font-family: 'Inter', sans-serif;
+	padding: 32px 24px;
+	color: #1e293b;
+}
+
+/* основной контейнер */
+.main-container {
+	max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* хедер с навигацией */
+.header-nav {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 20px 32px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo-area h1 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    background: linear-gradient(135deg, #1e293b, #2d3a4e);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.nav-links-mini {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.nav-links-mini a {
+    text-decoration: none;
+    color: #4b5565;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    }
+
+.nav-links-mini a i {
+    font-size: 0.9rem;
+}
+        
+.nav-links-mini a:hover {
+    color: #2563eb;
+}
+
+.user-greeting {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafc;
+    padding: 8px 20px;
+    border-radius: 60px;
+    border: 1px solid #e2e8f0;
+}
+
+.user-greeting i {
+    font-size: 1.3rem;
+    color: #3b82f6;
+}
+
+.user-greeting span {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Тикет */
+
+.ticket-container {
+	background: #ffffff;
+    border-radius: 32px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
+    overflow: hidden;
+    transition: all 0.2s;
+}
+
+.ticket-header {
+    padding: 20px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+	border-bottom: 1px solid #eef2f8;
+}
+
+.title-section h1 {
+	font-size: 1.7rem;
+	font-weight: 700;
+	letter-spacing: -0.3px;
+	color: #0f172a;
+}
+
+.title-section h2 {
+	font-size: 1.1rem;
+	font-weight: 500;
+	color: #3b7cbf;
+	background: #eef4ff;
+	display: inline-block;
+	padding: 4px 12px;
+	border-radius: 40px;
+	margin-top: 8px;
+}
+
+.nav-links {
+	display: flex;
+	gap: 28px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.nav-links a {
+	text-decoration: none;
+	font-weight: 500;
+	color: #4b5565;
+	font-size: 0.95rem;
+	transition: 0.2s;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.nav-links a i {
+	font-size: 1rem;
+	color: #6c86a3;
+}
+
+.nav-links a:hover {
+	color: #2563eb;
+}
+
+.nav-links a:hover i {
+	color: #2563eb;
+}
+
+/* тело заявки: двухколоночная сетка */
+.ticket-body {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.main-content {
+	flex: 2;
+	min-width: 260px;
+	padding: 28px 32px;
+	background: #fff;
+}
+
+.sidebar {
+	flex: 1;
+	min-width: 280px;
+	background: #fafcff;
+	border-left: 1px solid #eef2f8;
+	padding: 28px 24px;
+}
+
+/* карточки секций */
+.info-card {
+	background: #ffffff;
+	border-radius: 20px;
+	margin-bottom: 32px;
+	border: 1px solid #edf2f7;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.card-header {
+	padding: 18px 24px 12px 24px;
+	border-bottom: 1px solid #eff3f8;
+	font-weight: 600;
+	font-size: 1.1rem;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	color: #1e293b;
+}
+
+.card-header i {
+	color: #3b82f6;
+	font-size: 1.2rem;
+}
+
+.card-content {
+	padding: 20px 24px;
+}
+
+.field-row {
+	display: flex;
+	margin-bottom: 16px;
+	flex-wrap: wrap;
+}
+
+.field-label {
+	width: 130px;
+	font-weight: 500;
+	color: #5b6e8c;
+	font-size: 0.85rem;
+	text-transform: uppercase;
+	letter-spacing: 0.3px;
+}
+
+.field-value {
+	flex: 1;
+	color: #0f172a;
+	font-weight: 500;
+	word-break: break-word;
+}
+
+.subfield {
+	margin-top: 8px;
+	padding-left: 0;
+}
+
+.badge-status {
+	background: #fef9e3;
+	color: #b45309;
+	padding: 6px 14px;
+	border-radius: 40px;
+	font-size: 0.8rem;
+	font-weight: 700;
+	display: inline-block;
+}
+
+.priority-med {
+	background: #ffedd5;
+	color: #c2410c;
+	padding: 5px 14px;
+	border-radius: 40px;
+	font-size: 0.8rem;
+	font-weight: 600;
+	display: inline-block;
+}
+
+/* кнопки действий */
+.action-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 28px;
+}
+
+.btn {
+	border: none;
+	padding: 10px 20px;
+	border-radius: 40px;
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+	background: white;
+	transition: all 0.2s;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-family: inherit;
+}
+
+.btn-primary {
+	background: #2563eb;
+	color: white;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:hover {
+	background: #1d4ed8;
+	transform: translateY(-1px);
+}
+
+.btn-outline {
+	border: 1px solid #cbd5e1;
+	background: white;
+	color: #1f3a6b;
+}
+
+.btn-outline:hover {
+	background: #f8fafc;
+	border-color: #94a3b8;
+}
+
+/* история изменений */
+.history-item {
+	display: flex;
+	gap: 16px;
+	margin-bottom: 20px;
+	align-items: flex-start;
+}
+
+.history-icon {
+	background: #f1f5f9;
+	width: 36px;
+	height: 36px;
+	border-radius: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #3b82f6;
+}
+
+.history-detail {
+	flex: 1;
+}
+
+.history-title {
+	font-weight: 600;
+	margin-bottom: 4px;
+}
+
+.history-meta {
+	font-size: 0.75rem;
+	color: #6c7a91;
+}
+
+.file-placeholder {
+	background: #f8fafc;
+	border-radius: 16px;
+	padding: 16px;
+	text-align: center;
+	border: 1px dashed #cbd5e1;
+	color: #5b6e8c;
+	font-size: 0.85rem;
+}
+
+hr {
+	margin: 20px 0;
+	border: none;
+	border-top: 1px solid #eef2f8;
+}
+
+@media (max-width: 880px) {
+	body {
+		padding: 16px;
+	}
+
+	.main-content,
+	.sidebar {
+		padding: 20px;
+	}
+
+	.field-label {
+		width: 100%;
+		margin-bottom: 6px;
+	}
+
+	.field-row {
+		flex-direction: column;
+	}
+}
+
+/* небольшие улучшения для сида */
+.responsible-block {
+	background: #ffffff;
+	border-radius: 20px;
+	border: 1px solid #edf2f7;
+	margin-bottom: 28px;
+}
+
+.sidebar-section-title {
+	font-weight: 600;
+	margin-bottom: 16px;
+	font-size: 1rem;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: #0f172a;
+}
+
+.user-meta {
+	margin-top: 12px;
+}

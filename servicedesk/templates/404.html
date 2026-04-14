@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Service Desk | Ошибка 404</title>
+    <!-- Google Fonts для современного и чистого стиля -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 (бесплатные иконки) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static "css/styles.css" %}" />
+</head>
+<body>
+<div class="main-container">
+    <div class="header-nav">
+        <div class="logo-area">
+            <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
+        </div>
+        <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+            <div class="nav-links-mini">
+                <a href="{% url 'home' %}"><i class="fas fa-home"></i> Главная</a>
+                <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
+                <a href="{% url 'diagram' %}"><i class="fas fa-chart-line"></i> Отчеты</a>
+                <a href="#"><i class="fas fa-sliders-h"></i> Настройки</a>
+            </div>
+            <div class="user-greeting">
+                <i class="fas fa-user-circle"></i>
+                <span>Иванов И.И.</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+    <h1>Error 404 - По данному запросу ничего не найдено</h1>
+</div>
+</body>
+</html>

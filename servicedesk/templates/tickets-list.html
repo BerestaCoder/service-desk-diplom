@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Service Desk | Главная страница</title>
+    <!-- Google Fonts и базовые стили -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static "css/styles.css" %}" />
+    <style>
+        /* табличная сетка: две колонки */
+        .stats-grid {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .main-col {
+            flex: 3;
+            min-width: 480px;
+        }
+
+        /* карточка таблицы */
+        .stat-card {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02), 0 2px 4px rgba(0, 0, 0, 0.02);
+            margin-bottom: 28px;
+            border: 1px solid #eef2f8;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .card-header {
+            padding: 20px 24px 12px 24px;
+            border-bottom: 1px solid #f0f2f6;
+            font-weight: 600;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #0f172a;
+        }
+
+        .card-header i {
+            color: #3b82f6;
+            font-size: 1.3rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 0 0 8px 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 16px 24px 12px 24px;
+            background-color: #fafcff;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e9edf2;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+
+        .data-table td {
+            padding: 12px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* специфика для второй таблицы с большим количеством строк — делаем компактной с прокруткой */
+        .scrollable-table {
+            max-height: 460px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .scrollable-table::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .scrollable-table::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .scrollable-table::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        /* стили для чисел */
+        .value-highlight {
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        /* небольшая адаптивность */
+        @media (max-width: 800px) {
+            body {
+                padding: 20px 16px;
+            }
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .card-header {
+                padding: 16px 20px;
+            }
+            .data-table th, .data-table td {
+                padding: 10px 16px;
+            }
+        }
+
+        /* имитация навигации, но она не была детально описана на картинке, но добавим элементы для полноты (как в прошлой заявке) */
+        .nav-links-mini {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        .nav-links-mini a {
+            text-decoration: none;
+            color: #4b5565;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links-mini a i {
+            font-size: 0.9rem;
+        }
+        .nav-links-mini a:hover {
+            color: #2563eb;
+        }
+
+        /* footer маленький */
+        .footer-note {
+            margin-top: 32px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #6c7a91;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 24px;
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="header-nav">
+        <div class="logo-area">
+            <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
+        </div>
+        <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+            <div class="nav-links-mini">
+                <a href="{% url 'home' %}"><i class="fas fa-home"></i> Главная</a>
+                <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
+                <a href="{% url 'diagram' %}"><i class="fas fa-chart-line"></i> Отчеты</a>
+                <a href="#"><i class="fas fa-sliders-h"></i> Настройки</a>
+            </div>
+            <div class="user-greeting">
+                <i class="fas fa-user-circle"></i>
+                <span>Иванов И.И.</span>
+                <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основной контент: две колонки (первая таблица + вторая с большим списком) -->
+    <div class="stats-grid">
+        <!-- Левая колонка: первая таблица (Заявки, Заявки на командах, Задачи, Задач, Дата регистрации) -->
+        <div class="col">
+            <div class="stat-card">
+                <div class="card-header">
+                    <i class="fas fa-clipboard-list"></i> 
+                    <span>Сводка по процессам</span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>Наименование</th><th>Кол-во</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Заявки</td><td class="value-highlight">1</td></tr>
+                            <tr><td>Заявки на командах</td><td class="value-highlight">2</td></tr>
+                            <tr><td>Задачи</td><td class="value-highlight">3</td></tr>
+                            <tr><td>Задач</td><td class="value-highlight">4</td></tr>
+                            <tr><td>Дата регистрации</td><td>5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Дополнительный блок для симметрии, но согласно картинке только эти таблицы, 
+                 но для визуальной гармонии можно оставить как есть, вторая колонка содержит основную таблицу "В процессе" -->
+        </div>
+
+        <!-- Правая колонка: вторая таблица со множеством строк (В процессе от 1 до 331) -->
+        <div class="main-col">
+            <div class="stat-card">
+                <div class="card-header">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Активные задачи / В процессе</span>
+                </div>
+                <div class="scrollable-table">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>ID</th><th>Тема</th><th>Приоритет</th><th>Статус</th><th>Время регистрации</th><th>Ответственный</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for ticket in tickets %}
+                            <tr>
+                                <td>{{ ticket.id }}</td>
+                                <td>{{ ticket.topic }}</td>
+                                <td>{{ ticket.priority }}</td>
+                                <td>{{ ticket.status }}</td>
+                                <td>{{ ticket.time }}</td>
+                                <td>{{ ticket.responsible }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-note">
+        <i class="far fa-clock"></i> Данные актуальны на текущую сессию · Service Desk
+    </div>
+</div>
+
+<!-- Простой скрипт для имитации навигации (без перезагрузки) -->
+<script>
+    const navItems = document.querySelectorAll('.nav-links-mini a, .user-greeting');
+    navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            if(item.classList && item.classList.contains('user-greeting')) {
+                e.preventDefault();
+                alert('Профиль пользователя: Иванов И.И. (демо-режим)');
+            }
+        });
+    });
+</script>
+</body>
+</html>
