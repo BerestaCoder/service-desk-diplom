@@ -4,212 +4,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Service Desk | Просмотр заявки INC-0000000</title>
-    <!-- Google Fonts для современного и чистого стиля -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (бесплатные иконки) -->
+    <title>Service Desk | INC-0000000</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static "css/styles.css" %}" />
 </head>
 <body>
-<div class="main-container">
-    <div class="header-nav">
-        <div class="logo-area">
-            <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
-        </div>
-        <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
-            <div class="nav-links-mini">
-                <a href="{% url 'home' %}"><i class="fas fa-home"></i> Главная</a>
-                <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
-                <a href="{% url 'diagram' %}"><i class="fas fa-chart-line"></i> Отчеты</a>
-                <a href="#"><i class="fas fa-sliders-h"></i> Настройки</a>
+    <div class="container">
+        <div class="header-nav">
+            <div class="logo-area">
+                <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
             </div>
-            <div class="user-greeting">
-                <i class="fas fa-user-circle"></i>
-                <span>Иванов И.И.</span>
-                <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
-            </div>
-        </div>
-    </div>
-    <!-- Заголовок тикета -->
-    <div class="ticket-container">
-    <div class="ticket-header">
-        <div class="logo-area">
-            <div class="title-section">
-                <h1><i class="fas fa-ticket-alt" style="margin-right: 6px;"></i> INC-{{ ticket_id }}</h1>
-                <h2><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Новое</h2>
-                <h2><i class="fas fa-flag" style="margin-right: 6px;"></i>Средний</h2>
-            </div>
-        </div>
-    </div>
-
-    <div class="ticket-body">
-        <!-- Основной контент (левая/центральная часть) -->
-        <div class="main-content">
-            <!-- Блок описания -->
-            <div class="info-card">
-                <div class="card-header">
-                    <i class="fas fa-align-left"></i> Описание
+            <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+                <div class="nav-links-mini">
+                    <a href="{% url 'main' %}"><i class="fas fa-home"></i> Главная</a>
+                    <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
                 </div>
-                <div class="card-content">
-                    <div class="field-row">
-                        <div class="field-label">Тема</div>
-                        <div class="field-value">{{ description.topic }}</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Сообщение</div>
-                        <div class="field-value">{{ description.message }}</div>
+                <div class="user-greeting">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Иванов И.И.</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
+                </div>
+            </div>
+        </div>
+        <!-- Заголовок тикета -->
+        <div class="main-container">
+            <div class="main-container-header">
+                <div class="header-and-buttons">
+                    <h1><i class="fas fa-ticket-alt" style="margin-right: 6px;"></i> INC-{{ ticket_id }}</h1>
+                    <div class="action-buttons">
+                        <button class="btn btn-outline"><i class="fas fa-user-plus"></i> Назначить ответственного</button>
+                        <button class="btn btn-outline"><i class="fas fa-user-check"></i> Взять ответственность</button>
+                        <button class="btn btn-primary"><i class="fas fa-check-circle"></i> Завершить</button>
                     </div>
                 </div>
+                <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Новое</h2>
+                {% if status.priority == 0 %}
+                    <h2 class="tag tag-priority-low"><i class="fas fa-flag" style="margin-right: 6px;"></i>Низкий приоритет</h2>
+                {% elif status.priority == 1 %}
+                    <h2 class="tag tag-priority-medium"><i class="fas fa-flag" style="margin-right: 6px;"></i>Средний приоритет</h2>
+                {% elif status.priority == 2 %}
+                    <h2 class="tag tag-priority-high"><i class="fas fa-flag" style="margin-right: 6px;"></i>Высокий приоритет</h2>
+                {% endif %}
             </div>
+            <div class="ticket-body">
+                <!-- Основной контент (левая/центральная часть) -->
+                <div class="main-content">
+                    <!-- Инициатор -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-user"></i> Инициатор
+                        </div>
+                        <div class="card-content">
+                            <div class="field-grid">
+                                <div class="field-row">
+                                    <div class="field-label">ФИО</div>
+                                    <div class="field-value">{{ initiator.full_name }}</div>
+                                </div>
+                                <div class="field-row">
+                                    <div class="field-label">Почта</div>
+                                    <div class="field-value">{{ initiator.email }}</div>
+                                </div>
+                                <div class="field-row">
+                                    <div class="field-label">Должность</div>
+                                    <div class="field-value">{{ initiator.job }}</div>
+                                </div>
 
-            <!-- История изменений -->
-            <div class="info-card">
-                <div class="card-header">
-                    <i class="fas fa-history"></i> История изменений
-                </div>
-                <div class="card-content">
-                    <div class="history-item">
-                        <div class="history-icon"><i class="fas fa-user-check"></i></div>
-                        <div class="history-detail">
-                            <div class="history-title">Назначен ответственный</div>
-                            <div>Румивцев А.И.</div>
-                            <div class="history-meta">10.12.2025 11:20</div>
+                                <div class="field-row">
+                                    <div class="field-label">Телефон</div>
+                                    <div class="field-value">{{ initiator.phone }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="history-item">
-                        <div class="history-icon"><i class="fas fa-plus-circle"></i></div>
-                        <div class="history-detail">
-                            <div class="history-title">Создано</div>
-                            <div>Заявка зарегистрирована</div>
-                            <div class="history-meta">10.12.2025 11:00</div>
+                    <!-- Описание -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-align-left"></i> Описание
+                        </div>
+                        <div class="card-content">
+                            <div class="field-row">
+                                <div class="field-label">Тема</div>
+                                <div class="field-value">{{ description.topic }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Сообщение</div>
+                                <div class="field-value">{{ description.message }}</div>
+                            </div>
                         </div>
                     </div>
-                    <!-- дополнительная запись для полноты, но сохранён оригинал -->
+                </div>
+
+                <!-- Правая боковая панель -->
+
+                <div class="sidebar">
+                    <!-- Ответственный -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-id-badge"></i> Ответственный
+                        </div>
+                        <div class="card-content">
+                            <div class="field-row">
+                                <div class="field-label">ФИО</div>
+                                <div class="field-value">{{ initiator.full_name }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Должность</div>
+                                <div class="field-value">{{ initiator.job }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Почта</div>
+                                <div class="field-value">{{ initiator.email }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Телефон</div>
+                                <div class="field-value">{{ initiator.phone }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Даты -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-calendar"></i> Даты
+                        </div>
+                        <div class="card-content">
+                            <div class="field-row">
+                                <div class="field-label">Регистрация</div>
+                                <div class="field-value">{{ status.time_create }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Срок</div>
+                                <div class="field-value">{{ status.deadline }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Закрытие</div>
+                                <div class="field-value">{{ status.deadline }}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Файлы (как на картинке) -->
-            <div class="info-card">
-                <div class="card-header">
-                    <i class="fas fa-paperclip"></i> Файлы
-                </div>
-                <div class="card-content">
-                    <div class="file-placeholder">
-                        <i class="fas fa-image" style="margin-right: 6px;"></i> screenshot_1.png , screenshot_2.png 
-                        <div style="font-size: 0.75rem; margin-top: 8px;">(приложены скриншоты ошибки)</div>
-                    </div>
-                    <!-- иконка пустого чекбокса из дизайна, но показываем вложения -->
-                </div>
+            <div
+                style="border-top: 1px solid #edf2f8; padding: 12px 32px; background: #fff; font-size: 12px; color: #7e8b9e; display: flex; justify-content: space-between;">
+                <span><i class="far fa-clock"></i> Актуально на {{ current_datetime|date:"d.m.Y H:i:s" }}</span>
+                <span> Service Desk v0.1</span>
             </div>
         </div>
-
-        <!-- Правая боковая панель -->
-        <div class="sidebar">
-            <!-- Блок действий: Завершить, Назначить ответственного, Принять на себя -->
-            <div class="action-buttons">
-                <button class="btn btn-primary"><i class="fas fa-check-circle"></i> Завершить</button>
-                <button class="btn btn-outline"><i class="fas fa-user-plus"></i> Назначить ответственного</button>
-                <button class="btn btn-outline"><i class="fas fa-user-check"></i> Принять на себя</button>
-            </div>
-
-            <!-- Информация о пользователе (Инициатор) -->
-            <div class="responsible-block">
-                <div class="sidebar-section-title">
-                    <i class="fas fa-user-circle"></i> Инициатор
-                </div>
-                <div class="card-content" style="padding-top: 0;">
-                    <div class="field-row">
-                        <div class="field-label">ФИО</div>
-                        <div class="field-value">{{ initiator.full_name }}</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Должность</div>
-                        <div class="field-value">{{ initiator.job }}</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Почта</div>
-                        <div class="field-value">{{ initiator.email }}</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Телефон</div>
-                        <div class="field-value">{{ initiator.phone }}</div>
-                    </div>
-                    
-                </div>
-            </div>
-
-            <!-- Статус и метрики -->
-            <div class="responsible-block">
-                <div class="sidebar-section-title">
-                    <i class="fas fa-chart-simple"></i> Статус и сроки
-                </div>
-                <div class="card-content" style="padding-top: 0;">
-                    <div class="field-row">
-                        <div class="field-label">Статус</div>
-                        <div class="field-value"><span class="badge-status"><i class="fas fa-dot-circle"></i> Новое</span></div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Дата регистрации</div>
-                        <div class="field-value">{{ status.time_create }}</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Срок</div>
-                        <div class="field-value">{{ status.deadline }}</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Ответственный</div>
-                        <div class="field-value">Румивцев А.И.</div>
-                    </div>
-                    <div class="field-row">
-                        <div class="field-label">Приоритет</div>
-                        <div class="field-value"><span class="priority-med"><i class="fas fa-chart-simple"></i> Средний</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Доп. блок для полного соответствия: "Назначить ответственного" дублируется в действиях, но так как на картинке есть отдельный элемент в интерфейсе, мы его вынесли, но для точного визуала можно добавить еще строчку. Уже в действиях есть кнопки. Всё отлично -->
-            <!-- Также возможно отображение "Принято на себя" но оставляем как есть, чтобы соответствовало макету. -->
-        </div>
     </div>
-    <!-- подвал не обязателен, но для эстетики легкая граница -->
-    <div style="border-top: 1px solid #edf2f8; padding: 12px 32px; background: #fff; font-size: 12px; color: #7e8b9e; display: flex; justify-content: space-between;">
-        <span><i class="far fa-clock"></i> Актуально на 10.12.2025</span>
-        <span><i class="fas fa-database"></i> Service Desk v2.0</span>
-    </div>
-    </div>
-</div>
 
-<!-- Небольшой скрипт для имитации интерактива, но без бэкенда (просто алерты, чтобы кнопки оживали) -->
-<script>
-    // Добавляем минимальное поведение для демонстрации, что интерфейс реагирует (но дизайн на основе картинки)
-    const completeBtn = document.querySelector('.btn-primary');
-    const assignBtn = document.querySelectorAll('.btn-outline')[0];
-    const takeOwnBtn = document.querySelectorAll('.btn-outline')[1];
-    
-    if(completeBtn) {
-        completeBtn.addEventListener('click', () => {
-            alert('Функция "Завершить заявку". Статус изменён на "Закрыто" (демо).');
-        });
-    }
-    if(assignBtn) {
-        assignBtn.addEventListener('click', () => {
-            alert('Открыть окно назначения ответственного сотрудника.');
-        });
-    }
-    if(takeOwnBtn) {
-        takeOwnBtn.addEventListener('click', () => {
-            alert('Вы приняли заявку на себя. Ответственный обновлён на текущего пользователя.');
-        });
-    }
-    // также небольшая имитация навигации, чтобы не ломало впечатление
-    const navLinks = document.querySelectorAll('.nav-links a');
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            alert('Навигационное меню (демонстрация макета).');
-        });
-    });
-</script>
+    <script>
+        // Добавляем минимальное поведение для демонстрации, что интерфейс реагирует (но дизайн на основе картинки)
+        const completeBtn = document.querySelector('.btn-primary');
+        const assignBtn = document.querySelectorAll('.btn-outline')[0];
+        const takeOwnBtn = document.querySelectorAll('.btn-outline')[1];
+
+        if (completeBtn) {
+            completeBtn.addEventListener('click', () => {
+                alert('Функция "Завершить заявку". Статус изменён на "Закрыто" (демо).');
+            });
+        }
+        if (assignBtn) {
+            assignBtn.addEventListener('click', () => {
+                alert('Открыть окно назначения ответственного сотрудника.');
+            });
+        }
+        if (takeOwnBtn) {
+            takeOwnBtn.addEventListener('click', () => {
+                alert('Вы взяли на себя ответственность.');
+            });
+        }
+    </script>
 </body>
 </html>

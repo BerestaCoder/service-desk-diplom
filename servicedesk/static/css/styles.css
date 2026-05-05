@@ -12,7 +12,7 @@ body {
 }
 
 /* основной контейнер */
-.main-container {
+.container {
 	max-width: 1280px;
     margin: 0 auto;
 }
@@ -88,7 +88,7 @@ body {
 
 /* Тикет */
 
-.ticket-container {
+.main-container {
 	background: #ffffff;
     border-radius: 32px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
@@ -96,14 +96,17 @@ body {
     transition: all 0.2s;
 }
 
-.ticket-header {
+.main-container-header {
     padding: 20px 32px;
-    display: flex;
+	border-bottom: 1px solid #eef2f8;
+}
+
+.header-and-buttons {
+	display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 1rem;
     flex-wrap: wrap;
-    gap: 20px;
-	border-bottom: 1px solid #eef2f8;
 }
 
 .title-section h1 {
@@ -113,15 +116,78 @@ body {
 	color: #0f172a;
 }
 
-.title-section h2 {
-	font-size: 1.1rem;
-	font-weight: 500;
-	color: #3b7cbf;
-	background: #eef4ff;
-	display: inline-block;
-	padding: 4px 12px;
+.action-buttons {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-left: auto;
+}
+
+.btn {
+	border: none;
+	padding: 10px 20px;
 	border-radius: 40px;
-	margin-top: 8px;
+	font-weight: 600;
+	font-size: 0.9rem;
+	cursor: pointer;
+	background: white;
+	transition: all 0.2s;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-family: inherit;
+}
+
+.btn-primary {
+	background: #2563eb;
+	color: white;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-primary:hover {
+	background: #1d4ed8;
+	transform: translateY(-1px);
+}
+
+.btn-outline {
+	border: 1px solid #cbd5e1;
+	background: white;
+	color: #1f3a6b;
+}
+
+.btn-outline:hover {
+	background: #f8fafc;
+	border-color: #94a3b8;
+}
+
+/* Стили для всех тегов */
+.tag {
+    font-size: 1.1rem;
+    font-weight: 500;
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 40px;
+    margin-top: 8px;
+}
+
+.tag-stage {
+    color: #3b82f6;
+    background: #eff6ff;
+}
+
+.tag-priority-low {
+    color: #10b981;
+    background: #ecfdf5;
+}
+
+.tag-priority-medium {
+    color: #f59e0b;
+    background: #fffbeb;
+}
+
+.tag-priority-high {
+    color: #ef4444;
+    background: #fef2f2;
 }
 
 .nav-links {
@@ -205,6 +271,12 @@ body {
 	padding: 20px 24px;
 }
 
+.field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 20px;
+}
+
 .field-row {
 	display: flex;
 	margin-bottom: 16px;
@@ -240,61 +312,6 @@ body {
 	font-size: 0.8rem;
 	font-weight: 700;
 	display: inline-block;
-}
-
-.priority-med {
-	background: #ffedd5;
-	color: #c2410c;
-	padding: 5px 14px;
-	border-radius: 40px;
-	font-size: 0.8rem;
-	font-weight: 600;
-	display: inline-block;
-}
-
-/* кнопки действий */
-.action-buttons {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 12px;
-	margin-bottom: 28px;
-}
-
-.btn {
-	border: none;
-	padding: 10px 20px;
-	border-radius: 40px;
-	font-weight: 600;
-	font-size: 0.9rem;
-	cursor: pointer;
-	background: white;
-	transition: all 0.2s;
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	font-family: inherit;
-}
-
-.btn-primary {
-	background: #2563eb;
-	color: white;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.btn-primary:hover {
-	background: #1d4ed8;
-	transform: translateY(-1px);
-}
-
-.btn-outline {
-	border: 1px solid #cbd5e1;
-	background: white;
-	color: #1f3a6b;
-}
-
-.btn-outline:hover {
-	background: #f8fafc;
-	border-color: #94a3b8;
 }
 
 /* история изменений */
@@ -376,6 +393,7 @@ hr {
 
 .sidebar-section-title {
 	font-weight: 600;
+	margin-left: 16px;
 	margin-bottom: 16px;
 	font-size: 1rem;
 	display: flex;

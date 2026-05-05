@@ -1,5 +1,5 @@
 .venv\Scripts\activate.bat
-cd servicedesk
+cd service-desk-diplom
 python manage.py runserver
 
 ## Конфигурация `settings.ini`
@@ -15,5 +15,5 @@ python manage.py runserver
 - `name` — имя базы данных
 - `user` — имя пользователя
 - `password` — пароль
-- `host` — хост БД (стандартный: `5432`)
+- `host` — хост БД (стандартный: `localhost`)
 - `port` — порт (стандартный: `5432`)
