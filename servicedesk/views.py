@@ -10,16 +10,21 @@ def login(request):
 
 def ticket(request, ticket_id):
     if ticket_id == 0:
-        description = {"topic": "Тип услуги", "message": "Сообщение от пользователя"}
+        description = {"service": "Тип услуги", "message": "Сообщение от пользователя"}
         initiator = {"full_name": "Иванов Иван", "job": "Сотрудник отдела продаж", "email": "ivanov.ivan@mail.ru", "phone": "+7 (797) 231-07-63"}
-        status = {"code": "Новое", "priority": 0, "time_create": "Дата появления", "deadline": "Срок закрытия", "responsible": "Ответственный"}
+        responsible = {"full_name": "Соколов Дмитрий Андреевич", "job": "Ведущий инженер службы технической поддержки", "email": "d.sokolov@mail.ru", "phone": "+7 (495) 555-12-34"}
+        status = {"stage": 0, "priority": 0, }
+        datetimes = {"created": "2026-05-06T11:50:00Z", "deadline": "2026-05-06T11:55:00Z", "closed": "2026-05-06T11:59:00Z"}
     
         data = {
-            "ticket_id": ticket_id,
+            "ticket_code": "INC-00000000",
             "description": description,
             "initiator": initiator,
+            "responsible": responsible,
             "status": status,
-            'current_datetime': timezone.now(),}
+            "datetimes": datetimes,
+            'current_datetime': timezone.now(),
+            }
         return render(request, "ticket.html", data)
 
     try:
@@ -27,11 +32,64 @@ def ticket(request, ticket_id):
     except Ticket.DoesNotExist:
         return render(request, "404.html", {"message": "Тикет не найден"}, status=404)
 
-    description = {"topic": tic.service_name.name, "message": tic.description}
-    initiator = {"full_name": "Иванов Иван", "job": "Сотрудник отдела продаж", "email": "ivanov.ivan@mail.ru", "phone": "+7 (797) 231-07-63"}
-    status = {"code": tic.status, "time_create": tic.datetime_open, "deadline": tic.datetime_close, "responsible": tic.responsible, "priority": tic.priority}
-    
-    data = {"ticket_id": ticket_id, "description": description, "initiator": initiator, "status": status}
+    tags = {
+        "stage": tic.stage,
+        "priority": tic.priority
+    }
+
+    description = {
+        "service": tic.fk_service.name,
+        "message": tic.description
+    }
+
+    initiator = {
+        "full_name": tic.fk_initiator.fulname,
+        "job": tic.fk_initiator.fk_job.name,
+        "email": tic.fk_initiator.email,
+        "phone": tic.fk_initiator.phone,
+    }
+
+    # Безопасное получение данных ответственного
+    if tic.fk_responsible:
+        responsible = {
+            "full_name": tic.fk_responsible.fulname,
+            "job": tic.fk_responsible.fk_job.name,
+            "email": tic.fk_responsible.email,
+            "phone": tic.fk_responsible.phone,
+        }
+    else:
+        responsible = {
+            "full_name": "Не назначен",
+            "job": "",
+            "email": "",
+            "phone": "",
+        }
+
+    # Даты с обработкой NULL
+    datetime_fields = [
+        'datetime_registered',
+        'datetime_classified', 
+        'datetime_assigned',
+        'datetime_diagnosed',
+        'datetime_solved',
+        'datetime_closed',
+        'datetime_deadlinne'
+    ]
+
+    datetimes = {}
+    for field in datetime_fields:
+        value = getattr(tic, field, None)
+        datetimes[field.replace('datetime_', 'time_')] = value
+
+    data = {
+        "ticket_code": f"INC-{tic.id}",
+        "tags": tags,
+        "description": description,
+        "initiator": initiator,
+        "responsible": responsible,
+        "datetimes": datetimes,
+        'current_datetime': timezone.now(),
+}
     return render(request, "ticket.html", data)
 
 def main(request):

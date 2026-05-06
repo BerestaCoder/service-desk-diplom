@@ -1,18 +1,28 @@
 from django.db import models
-from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
+from django.core.validators import RegexValidator
 
-class TicketType(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=20)
+# class ServiceType(models.Model):
+#     id = models.IntegerField(primary_key=True)
+#     name = models.CharField(max_length=3)
 
 class Service(models.Model):
+    SERVICE_TYPES = [
+        (0, 'INC'),
+        (1, 'REQ'),
+        (2, 'PRB'),
+        (3, 'CHG'),
+    ]
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=50)
-    service_ticket_type = models.ForeignKey(TicketType, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    service_type = models.IntegerField(choices=SERVICE_TYPES, default=0)
 
-class Status(models.Model):
-    id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=20)
+# class Stage(models.Model):
+#     id = models.IntegerField(primary_key=True)
+#     name = models.CharField(max_length=20)
+
+# class Department(models.Model):
+#     id = models.IntegerField(primary_key=True)
+#     name = models.CharField(max_length=255)
 
 class Department(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -22,6 +32,7 @@ class Job(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=255)
     fk_department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    is_staff = models.BooleanField(default=False)
 
 class User(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -37,22 +48,33 @@ class User(models.Model):
         ]
     )
     fk_job = models.ForeignKey(Job, on_delete=models.CASCADE)
-    is_admin = models.BooleanField(default=False)
 
 class Ticket(models.Model):
+    STAGES = [
+        (0, 'Новое'),
+        (1, 'Классифицируется'),
+        (2, 'Назначен'),
+        (3, 'Диагностирован'),
+        (4, 'Решён'),
+        (5, 'Закрыт'),
+    ]
+    PRIORITIES = [
+        (0, 'Низкий приоритет'),
+        (1, 'Средний приоритет'),
+        (2, 'Высокий приоритет'),
+    ]
     id = models.IntegerField(primary_key=True)
+    stage = models.IntegerField(choices=STAGES, default=0)
+    priority = models.IntegerField(choices=PRIORITIES, default=0)
     fk_service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    fk_status = models.ForeignKey(Status, on_delete=models.CASCADE)
-    fk_responsible = models.ForeignKey(User, on_delete=models.CASCADE)
-    priority = models.PositiveIntegerField(
-        validators=[
-            MinValueValidator(1, message="Приоритет не может быть меньше 1"),
-            MaxValueValidator(5, message="Приоритет не может быть больше 5")
-        ],
-        default=1
-    )
+    fk_initiator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='initiator')
+    fk_responsible = models.ForeignKey(User, on_delete=models.CASCADE, related_name='responsible', null=True, blank=True)
     description = models.CharField(max_length=1000)
-    datetime_open = models.DateTimeField()
+    datetime_registered = models.DateTimeField()
+    datetime_classified = models.DateTimeField(null=True, blank=True)
+    datetime_assigned = models.DateTimeField(null=True, blank=True)
+    datetime_diagnosed = models.DateTimeField(null=True, blank=True)
+    datetime_solved = models.DateTimeField(null=True, blank=True)
+    datetime_closed = models.DateTimeField(null=True, blank=True)
     datetime_deadlinne = models.DateTimeField()
-    datetime_close = models.DateTimeField()
     

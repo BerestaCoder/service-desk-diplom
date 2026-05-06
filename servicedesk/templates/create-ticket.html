@@ -91,7 +91,7 @@
     </style>
 </head>
 <body>
-<div class="main-container">
+<div class="container">
     <div class="header-nav">
         <div class="logo-area">
             <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
@@ -108,7 +108,7 @@
             </div>
         </div>
     </div>
-    <div class="ticket-container">
+    <div class="main-container">
         <div class="header-area">
             <div class="logo-title">
                 <h1><i class="fas fa-pen-alt" style="margin-right: 6px;"></i> Создание заявки</h1>
@@ -118,10 +118,39 @@
         <div class="form-body">
             <form method="POST">
                 {% csrf_token %}
-                <table>
-                    {{ form }}
-                </table>
-                <input type="submit" value="Send">
+                
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}" class="form-label">
+                        {% if field.name == 'service' %}
+                            <i class="fas fa-cogs"></i>
+                        {% elif field.name == 'description' %}
+                            <i class="fas fa-align-left"></i>
+                        {% else %}
+                            <i class="fas fa-pencil-alt"></i>
+                        {% endif %}
+                        {{ field.label }}
+                        {% if field.field.required %}
+                            <span style="color: #ef4444; font-size: 0.9rem;">*</span>
+                        {% endif %}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small style="color: #6b7280; font-size: 0.8rem; margin-top: 6px; display: block;">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li><i class="fas fa-exclamation-circle" style="font-size: 0.7rem;"></i> {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Отправить заявку
+                </button>
             </form>
         </div>
     </div>

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Service Desk | INC-0000000</title>
+    <title>Service Desk | {{ ticket_code }}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static "css/styles.css" %}" />
@@ -31,25 +31,37 @@
         <div class="main-container">
             <div class="main-container-header">
                 <div class="header-and-buttons">
-                    <h1><i class="fas fa-ticket-alt" style="margin-right: 6px;"></i> INC-{{ ticket_id }}</h1>
+                    <h1><i class="fas fa-ticket-alt" style="margin-right: 6px;"></i> {{ ticket_code }}</h1>
                     <div class="action-buttons">
                         <button class="btn btn-outline"><i class="fas fa-user-plus"></i> Назначить ответственного</button>
                         <button class="btn btn-outline"><i class="fas fa-user-check"></i> Взять ответственность</button>
                         <button class="btn btn-primary"><i class="fas fa-check-circle"></i> Завершить</button>
                     </div>
                 </div>
-                <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Новое</h2>
-                {% if status.priority == 0 %}
+                {% if tags.stage == 0 %}
+                    <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Новое</h2>
+                {% elif tags.stage == 1 %}
+                    <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Классифицируется</h2>
+                {% elif tags.stage == 2 %}
+                    <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Назначен</h2>
+                {% elif tags.stage == 3 %}
+                    <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Диагностирован</h2>
+                {% elif tags.stage == 4 %}
+                    <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Решён</h2>
+                {% elif tags.stage == 5 %}
+                    <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Закрыт</h2>
+                {% endif %}
+                {% if tags.priority == 0 %}
                     <h2 class="tag tag-priority-low"><i class="fas fa-flag" style="margin-right: 6px;"></i>Низкий приоритет</h2>
-                {% elif status.priority == 1 %}
+                {% elif tags.priority == 1 %}
                     <h2 class="tag tag-priority-medium"><i class="fas fa-flag" style="margin-right: 6px;"></i>Средний приоритет</h2>
-                {% elif status.priority == 2 %}
+                {% elif tags.priority == 2 %}
                     <h2 class="tag tag-priority-high"><i class="fas fa-flag" style="margin-right: 6px;"></i>Высокий приоритет</h2>
                 {% endif %}
             </div>
-            <div class="ticket-body">
+            <div class="main-body">
                 <!-- Основной контент (левая/центральная часть) -->
-                <div class="main-content">
+                <div class="center-container">
                     <!-- Инициатор -->
                     <div class="info-card">
                         <div class="card-header">
@@ -85,7 +97,7 @@
                         <div class="card-content">
                             <div class="field-row">
                                 <div class="field-label">Тема</div>
-                                <div class="field-value">{{ description.topic }}</div>
+                                <div class="field-value">{{ description.service }}</div>
                             </div>
                             <div class="field-row">
                                 <div class="field-label">Сообщение</div>
@@ -106,19 +118,19 @@
                         <div class="card-content">
                             <div class="field-row">
                                 <div class="field-label">ФИО</div>
-                                <div class="field-value">{{ initiator.full_name }}</div>
+                                <div class="field-value">{{ responsible.full_name }}</div>
                             </div>
                             <div class="field-row">
                                 <div class="field-label">Должность</div>
-                                <div class="field-value">{{ initiator.job }}</div>
+                                <div class="field-value">{{ responsible.job }}</div>
                             </div>
                             <div class="field-row">
                                 <div class="field-label">Почта</div>
-                                <div class="field-value">{{ initiator.email }}</div>
+                                <div class="field-value">{{ responsible.email }}</div>
                             </div>
                             <div class="field-row">
                                 <div class="field-label">Телефон</div>
-                                <div class="field-value">{{ initiator.phone }}</div>
+                                <div class="field-value">{{ responsible.phone }}</div>
                             </div>
                         </div>
                     </div>
@@ -130,16 +142,32 @@
                         </div>
                         <div class="card-content">
                             <div class="field-row">
-                                <div class="field-label">Регистрация</div>
-                                <div class="field-value">{{ status.time_create }}</div>
+                                <div class="field-label">Зарегистрировано</div>
+                                <div class="field-value">{{ datetimes.time_registered|date:"d.m.Y H:i" }}</div>
                             </div>
                             <div class="field-row">
                                 <div class="field-label">Срок</div>
-                                <div class="field-value">{{ status.deadline }}</div>
+                                <div class="field-value">{{ datetimes.time_deadlinne|date:"d.m.Y H:i" }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Классифицированно</div>
+                                <div class="field-value">{{ datetimes.time_classified|date:"d.m.Y H:i" }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Назначено</div>
+                                <div class="field-value">{{ datetimes.time_assigned|date:"d.m.Y H:i" }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Диагностировано</div>
+                                <div class="field-value">{{ datetimes.time_diagnosed|date:"d.m.Y H:i" }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Решено</div>
+                                <div class="field-value">{{ datetimes.time_solved|date:"d.m.Y H:i" }}</div>
                             </div>
                             <div class="field-row">
                                 <div class="field-label">Закрытие</div>
-                                <div class="field-value">{{ status.deadline }}</div>
+                                <div class="field-value">{{ datetimes.time_closed|date:"d.m.Y H:i" }}</div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +182,6 @@
     </div>
 
     <script>
-        // Добавляем минимальное поведение для демонстрации, что интерфейс реагирует (но дизайн на основе картинки)
         const completeBtn = document.querySelector('.btn-primary');
         const assignBtn = document.querySelectorAll('.btn-outline')[0];
         const takeOwnBtn = document.querySelectorAll('.btn-outline')[1];
