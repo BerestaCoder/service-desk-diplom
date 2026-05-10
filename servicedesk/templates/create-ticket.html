@@ -1,159 +1,86 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Service Desk | Создание заявки</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static "css/styles.css" %}" />
-    <style>
-        /* шапка с навигацией и пользователем */
-        .header-area {
-            padding: 22px 32px 16px 32px;
-            border-bottom: 1px solid #eef2f8;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            background: #ffffff;
-        }
-
-        .logo-title h1 {
-            font-size: 1.7rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #1e293b, #2d3a4e);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-
-        /* основное тело формы */
-        .form-body {
-            padding: 32px 36px 40px 36px;
-        }
-
-        /* группа полей */
-        .form-group {
-            margin-bottom: 32px;
-        }
-
-        .form-label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 12px;
-            color: #1f2a44;
-        }
-
-        .form-label i {
-            color: #3b82f6;
-            width: 22px;
-            font-size: 1.1rem;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 14px 18px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 20px;
-            background: #ffffff;
-            transition: all 0.2s;
-            outline: none;
-            color: #0f172a;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 140px;
-        }
-
-        /* стиль для select */
-        select {
-            appearance: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%234b5565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
-            background-repeat: no-repeat;
-            background-position: right 18px center;
-            background-size: 16px;
-        }
-    </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="header-nav">
-        <div class="logo-area">
-            <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
-        </div>
-        <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
-            <div class="nav-links-mini">
-                <a href="{% url 'main' %}"><i class="fas fa-home"></i> Главная</a>
-                <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
+    <div class="container">
+        <div class="header-nav">
+            <div class="logo-area">
+                <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
             </div>
-            <div class="user-greeting">
-                <i class="fas fa-user-circle"></i>
-                <span>Иванов И.И.</span>
-                <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
-            </div>
-        </div>
-    </div>
-    <div class="main-container">
-        <div class="header-area">
-            <div class="logo-title">
-                <h1><i class="fas fa-pen-alt" style="margin-right: 6px;"></i> Создание заявки</h1>
-            </div>
-        </div>
-        <!-- Форма создания заявки -->
-        <div class="form-body">
-            <form method="POST">
-                {% csrf_token %}
-                
-                {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}" class="form-label">
-                        {% if field.name == 'service' %}
-                            <i class="fas fa-cogs"></i>
-                        {% elif field.name == 'description' %}
-                            <i class="fas fa-align-left"></i>
-                        {% else %}
-                            <i class="fas fa-pencil-alt"></i>
-                        {% endif %}
-                        {{ field.label }}
-                        {% if field.field.required %}
-                            <span style="color: #ef4444; font-size: 0.9rem;">*</span>
-                        {% endif %}
-                    </label>
-                    {{ field }}
-                    {% if field.help_text %}
-                        <small style="color: #6b7280; font-size: 0.8rem; margin-top: 6px; display: block;">{{ field.help_text }}</small>
-                    {% endif %}
-                    {% if field.errors %}
-                        <ul class="errorlist">
-                            {% for error in field.errors %}
-                                <li><i class="fas fa-exclamation-circle" style="font-size: 0.7rem;"></i> {{ error }}</li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
+            <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
+                <div class="nav-links-mini">
+                    <a href="{% url 'main' %}"><i class="fas fa-home"></i> Главная</a>
+                    <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
                 </div>
-                {% endfor %}
-                
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-paper-plane"></i> Отправить заявку
-                </button>
+                <div class="user-greeting">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Иванов И.И.</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
+                </div>
+            </div>
+        </div>
+        <div class="main-container">
+            <form method="POST" action="create-ticket">
+                <div class="main-container-header">
+                    <div class="header-and-buttons">
+                        <h1><i class="fas fa-pen-alt" style="margin-right: 6px;"></i> Создать заявку</h1>
+                        <div class="action-buttons">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i>
+                                Зарегистрировать</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="main-body">
+                    <div class="center-container">
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                        <div class="form-group">
+                            <label for="{{ field.id_for_label }}" class="form-label">
+                                {% if field.name == 'service' %}
+                                <i class="fas fa-cogs"></i>
+                                {% elif field.name == 'description' %}
+                                <i class="fas fa-align-left"></i>
+                                {% else %}
+                                <i class="fas fa-pencil-alt"></i>
+                                {% endif %}
+                                {{ field.label }}
+                                {% if field.field.required %}
+                                <span style="color: #ef4444; font-size: 0.9rem;">*</span>
+                                {% endif %}
+                            </label>
+                            {{ field }}
+                            {% if field.help_text %}
+                            <small style="color: #6b7280; font-size: 0.8rem; margin-top: 6px; display: block;">{{
+                                field.help_text }}</small>
+                            {% endif %}
+                            {% if field.errors %}
+                            <ul class="errorlist">
+                                {% for error in field.errors %}
+                                <li><i class="fas fa-exclamation-circle" style="font-size: 0.7rem;"></i> {{ error }}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </form>
         </div>
     </div>
-</div>
 </body>
+
 </html>

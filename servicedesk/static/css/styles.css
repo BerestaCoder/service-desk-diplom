@@ -14,99 +14,99 @@ body {
 /* основной контейнер */
 .container {
 	max-width: 1280px;
-    margin: 0 auto;
+	margin: 0 auto;
 }
 
 /* хедер с навигацией */
 .header-nav {
-    background: #ffffff;
-    border-radius: 28px;
-    padding: 20px 32px;
-    margin-bottom: 28px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
+	background: #ffffff;
+	border-radius: 28px;
+	padding: 20px 32px;
+	margin-bottom: 28px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.03);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 20px;
 }
 
 .logo-area h1 {
-    font-size: 1.7rem;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-    background: linear-gradient(135deg, #1e293b, #2d3a4e);
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+	font-size: 1.7rem;
+	font-weight: 700;
+	letter-spacing: -0.3px;
+	background: linear-gradient(135deg, #1e293b, #2d3a4e);
+	background-clip: text;
+	-webkit-background-clip: text;
+	color: transparent;
 }
 
 .nav-links-mini {
-    display: flex;
-    gap: 24px;
-    align-items: center;
+	display: flex;
+	gap: 24px;
+	align-items: center;
 }
 
 .nav-links-mini a {
-    text-decoration: none;
-    color: #4b5565;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+	text-decoration: none;
+	color: #4b5565;
+	font-weight: 500;
+	font-size: 0.9rem;
+	transition: 0.2s;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
 }
 
 .nav-links-mini a i {
-    font-size: 0.9rem;
+	font-size: 0.9rem;
 }
-        
+
 .nav-links-mini a:hover {
-    color: #2563eb;
+	color: #2563eb;
 }
 
 .user-greeting {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: #f8fafc;
-    padding: 8px 20px;
-    border-radius: 60px;
-    border: 1px solid #e2e8f0;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	background: #f8fafc;
+	padding: 8px 20px;
+	border-radius: 60px;
+	border: 1px solid #e2e8f0;
 }
 
 .user-greeting i {
-    font-size: 1.3rem;
-    color: #3b82f6;
+	font-size: 1.3rem;
+	color: #3b82f6;
 }
 
 .user-greeting span {
-    font-weight: 600;
-    color: #1e293b;
+	font-weight: 600;
+	color: #1e293b;
 }
 
 /* Тикет */
 
 .main-container {
 	background: #ffffff;
-    border-radius: 32px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
-    overflow: hidden;
-    transition: all 0.2s;
+	border-radius: 32px;
+	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.02);
+	overflow: hidden;
+	transition: all 0.2s;
 }
 
 .main-container-header {
-    padding: 20px 32px;
+	padding: 20px 32px;
 	border-bottom: 1px solid #eef2f8;
 }
 
 .header-and-buttons {
 	display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap;
 }
 
 .title-section h1 {
@@ -162,32 +162,39 @@ body {
 
 /* Стили для всех тегов */
 .tag {
-    font-size: 1.1rem;
-    font-weight: 500;
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 40px;
-    margin-top: 8px;
+	font-size: 1.1rem;
+	font-weight: 500;
+	display: inline-block;
+	padding: 4px 12px;
+	border-radius: 40px;
+	margin-top: 8px;
 }
 
 .tag-stage {
-    color: #3b82f6;
-    background: #eff6ff;
+	color: #3b82f6;
+	background: #eff6ff;
 }
 
 .tag-priority-low {
-    color: #10b981;
-    background: #ecfdf5;
+	color: #10b981;
+	background: #ecfdf5;
 }
 
 .tag-priority-medium {
-    color: #f59e0b;
-    background: #fffbeb;
+	color: #f59e0b;
+	background: #fffbeb;
 }
 
 .tag-priority-high {
-    color: #ef4444;
-    background: #fef2f2;
+	color: #ef4444;
+	background: #fef2f2;
+}
+
+.table-tag {
+	font-weight: 500;
+	display: inline-block;
+	padding: 4px 12px;
+	border-radius: 40px;
 }
 
 .nav-links {
@@ -248,9 +255,9 @@ body {
 }
 
 .field-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 20px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 20px;
 }
 
 .field-row {
@@ -283,4 +290,108 @@ body {
 	font-size: 0.8rem;
 	font-weight: 700;
 	display: inline-block;
+}
+
+/* Таблица */
+.data-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.9rem;
+}
+
+.data-table th {
+	text-align: left;
+	padding: 16px 24px 12px 24px;
+	background-color: #fafcff;
+	font-weight: 600;
+	color: #475569;
+	border-bottom: 1px solid #e9edf2;
+	font-size: 0.85rem;
+	letter-spacing: 0.3px;
+}
+
+.data-table td {
+	white-space: nowrap;
+	padding: 12px 24px;
+	border-bottom: 1px solid #f1f5f9;
+	color: #1e293b;
+	font-weight: 500;
+}
+
+.data-table td.wrap-text {
+	white-space: normal;
+	word-wrap: break-word;
+	word-break: break-word;
+}
+
+/* Потемнение при наводке на строку в таблице */
+.clickable-row {
+	cursor: pointer;
+	transition: background-color 0.2s;
+}
+
+.clickable-row:hover {
+	background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* основное тело формы */
+.form-body {
+	padding: 32px 36px 40px 36px;
+}
+
+/* группа полей */
+.form-group {
+	margin-bottom: 32px;
+}
+
+.form-label {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-weight: 600;
+	font-size: 1rem;
+	margin-bottom: 12px;
+	color: #1f2a44;
+}
+
+.form-label i {
+	color: #3b82f6;
+	width: 22px;
+	font-size: 1.1rem;
+}
+
+input,
+select,
+textarea {
+	width: 100%;
+	padding: 14px 18px;
+	font-family: 'Inter', sans-serif;
+	font-size: 0.95rem;
+	border: 1.5px solid #e2e8f0;
+	border-radius: 20px;
+	background: #ffffff;
+	transition: all 0.2s;
+	outline: none;
+	color: #0f172a;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	border-color: #3b82f6;
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+textarea {
+	resize: vertical;
+	min-height: 140px;
+}
+
+/* стиль для select */
+select {
+	appearance: none;
+	background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%234b5565" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+	background-repeat: no-repeat;
+	background-position: right 18px center;
+	background-size: 16px;
 }

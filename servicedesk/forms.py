@@ -1,14 +1,10 @@
 from django import forms
+from .models import Service
  
 class TicketForm(forms.Form):
     service = forms.ChoiceField(
         label="Сервис",
-        choices=(
-            (1, "Восстановление пароля и доступ к учетной записи"),
-            (2, "Установка и настройка ПО"),
-            (3, "Подключение к Wi-Fi и сети"),
-            (4, "Добавить пользователя в группу Active Directory"),
-        ),
+        choices=[],
         widget=forms.Select(attrs={
             'class': 'form-control',
             'placeholder': 'Выберите сервис',
@@ -22,3 +18,10 @@ class TicketForm(forms.Form):
         }),
         max_length=1000,
     )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        services = Service.objects.all().order_by('id')
+        choices = [(service.id, service.name) for service in services]
+        self.fields['service'].choices = choices

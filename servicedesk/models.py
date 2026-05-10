@@ -1,10 +1,6 @@
 from django.db import models
 from django.core.validators import RegexValidator
 
-# class ServiceType(models.Model):
-#     id = models.IntegerField(primary_key=True)
-#     name = models.CharField(max_length=3)
-
 class Service(models.Model):
     SERVICE_TYPES = [
         (0, 'INC'),
@@ -12,32 +8,24 @@ class Service(models.Model):
         (2, 'PRB'),
         (3, 'CHG'),
     ]
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     service_type = models.IntegerField(choices=SERVICE_TYPES, default=0)
 
-# class Stage(models.Model):
-#     id = models.IntegerField(primary_key=True)
-#     name = models.CharField(max_length=20)
-
-# class Department(models.Model):
-#     id = models.IntegerField(primary_key=True)
-#     name = models.CharField(max_length=255)
-
 class Department(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
 
 class Job(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     fk_department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    is_staff = models.BooleanField(default=False)
 
 class User(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     email = models.CharField(max_length=255)
-    fulname = models.CharField(max_length=250)
+    fullname = models.CharField(max_length=250)
+    shortname = models.CharField(max_length=100)
     phone = models.CharField(
         max_length=20,
         validators=[
@@ -48,22 +36,22 @@ class User(models.Model):
         ]
     )
     fk_job = models.ForeignKey(Job, on_delete=models.CASCADE)
+    is_staff = models.BooleanField(default=False)
 
 class Ticket(models.Model):
     STAGES = [
         (0, 'Новое'),
         (1, 'Классифицируется'),
         (2, 'Назначен'),
-        (3, 'Диагностирован'),
-        (4, 'Решён'),
-        (5, 'Закрыт'),
+        (3, 'Решён'),
+        (4, 'Закрыт'),
     ]
     PRIORITIES = [
-        (0, 'Низкий приоритет'),
-        (1, 'Средний приоритет'),
-        (2, 'Высокий приоритет'),
+        (0, 'Низкий'),
+        (1, 'Средний'),
+        (2, 'Высокий'),
     ]
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     stage = models.IntegerField(choices=STAGES, default=0)
     priority = models.IntegerField(choices=PRIORITIES, default=0)
     fk_service = models.ForeignKey(Service, on_delete=models.CASCADE)
@@ -76,5 +64,6 @@ class Ticket(models.Model):
     datetime_diagnosed = models.DateTimeField(null=True, blank=True)
     datetime_solved = models.DateTimeField(null=True, blank=True)
     datetime_closed = models.DateTimeField(null=True, blank=True)
-    datetime_deadlinne = models.DateTimeField()
+    datetime_deadlinne = models.DateTimeField(null=True, blank=True)
+    is_stopped = models.BooleanField(default=False)
     

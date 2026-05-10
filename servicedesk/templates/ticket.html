@@ -33,15 +33,25 @@
                 <div class="header-and-buttons">
                     <h1><i class="fas fa-ticket-alt" style="margin-right: 6px;"></i> {{ ticket_code }}</h1>
                     <div class="action-buttons">
-                        <button class="btn btn-outline"><i class="fas fa-user-plus"></i> Назначить ответственного</button>
-                        <button class="btn btn-outline"><i class="fas fa-user-check"></i> Взять ответственность</button>
-                        <button class="btn btn-primary"><i class="fas fa-check-circle"></i> Завершить</button>
+                        {% if tags.stage == 0 %}
+                            <button class="btn btn-outline"><i class="fas fa-user-plus"></i> Изменить услугу</button>
+                            <button class="btn btn-primary"><i class="fas fa-user-check"></i> Утвердить услугу</button>
+                        {% elif tags.stage == 1 %}
+                            <button class="btn btn-outline"><i class="fas fa-user-plus"></i> Назначить ответственного</button>
+                            <button class="btn btn-primary"><i class="fas fa-user-check"></i> Взять ответственность</button>
+                        {% elif tags.stage == 2 %}
+                        <button class="btn btn-primary"><i class="fas fa-check"></i> Завершить</button>
+                        {% elif tags.stage == 3 %}
+                            <button class="btn btn-primary"><i class="fas fa-lock"></i> Закрыть</button>
+                        {% else %}
+                            
+                        {% endif %}
                     </div>
                 </div>
                 {% if tags.stage == 0 %}
                     <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Новое</h2>
                 {% elif tags.stage == 1 %}
-                    <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Классифицируется</h2>
+                    <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Классифицирован</h2>
                 {% elif tags.stage == 2 %}
                     <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Назначен</h2>
                 {% elif tags.stage == 3 %}
@@ -71,7 +81,7 @@
                             <div class="field-grid">
                                 <div class="field-row">
                                     <div class="field-label">ФИО</div>
-                                    <div class="field-value">{{ initiator.full_name }}</div>
+                                    <div class="field-value">{{ initiator.fullname }}</div>
                                 </div>
                                 <div class="field-row">
                                     <div class="field-label">Почта</div>
@@ -81,10 +91,13 @@
                                     <div class="field-label">Должность</div>
                                     <div class="field-value">{{ initiator.job }}</div>
                                 </div>
-
                                 <div class="field-row">
                                     <div class="field-label">Телефон</div>
                                     <div class="field-value">{{ initiator.phone }}</div>
+                                </div>
+                                <div class="field-row">
+                                    <div class="field-label">Отдел</div>
+                                    <div class="field-value">{{ initiator.department }}</div>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +121,6 @@
                 </div>
 
                 <!-- Правая боковая панель -->
-
                 <div class="sidebar">
                     <!-- Ответственный -->
                     <div class="info-card">
@@ -116,9 +128,10 @@
                             <i class="fas fa-id-badge"></i> Ответственный
                         </div>
                         <div class="card-content">
+                            {% if responsible %}
                             <div class="field-row">
                                 <div class="field-label">ФИО</div>
-                                <div class="field-value">{{ responsible.full_name }}</div>
+                                <div class="field-value">{{ responsible.fullname }}</div>
                             </div>
                             <div class="field-row">
                                 <div class="field-label">Должность</div>
@@ -132,6 +145,11 @@
                                 <div class="field-label">Телефон</div>
                                 <div class="field-value">{{ responsible.phone }}</div>
                             </div>
+                            {% else %}
+                            <div class="field-row">
+                                <div class="field-label">Не назначен</div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
 
@@ -142,33 +160,39 @@
                         </div>
                         <div class="card-content">
                             <div class="field-row">
-                                <div class="field-label">Зарегистрировано</div>
+                                <div class="field-label">Создан</div>
                                 <div class="field-value">{{ datetimes.time_registered|date:"d.m.Y H:i" }}</div>
                             </div>
+                            {% if datetimes.time_classified %}
+                            <div class="field-row">
+                                <div class="field-label">Присвоен класс</div>
+                                <div class="field-value">{{ datetimes.time_classified|date:"d.m.Y H:i" }}</div>
+                            </div>
+                            {% endif %}
+                            {% if datetimes.time_deadlinne %}
                             <div class="field-row">
                                 <div class="field-label">Срок</div>
                                 <div class="field-value">{{ datetimes.time_deadlinne|date:"d.m.Y H:i" }}</div>
                             </div>
+                            {% endif %}
+                            {% if datetimes.time_assigned %}
                             <div class="field-row">
-                                <div class="field-label">Классифицированно</div>
-                                <div class="field-value">{{ datetimes.time_classified|date:"d.m.Y H:i" }}</div>
-                            </div>
-                            <div class="field-row">
-                                <div class="field-label">Назначено</div>
+                                <div class="field-label">Назначен</div>
                                 <div class="field-value">{{ datetimes.time_assigned|date:"d.m.Y H:i" }}</div>
                             </div>
+                            {% endif %}
+                            {% if datetimes.time_solved %}
                             <div class="field-row">
-                                <div class="field-label">Диагностировано</div>
-                                <div class="field-value">{{ datetimes.time_diagnosed|date:"d.m.Y H:i" }}</div>
-                            </div>
-                            <div class="field-row">
-                                <div class="field-label">Решено</div>
+                                <div class="field-label">Решён</div>
                                 <div class="field-value">{{ datetimes.time_solved|date:"d.m.Y H:i" }}</div>
                             </div>
+                            {% endif %}
+                            {% if datetimes.time_closed %}
                             <div class="field-row">
-                                <div class="field-label">Закрытие</div>
+                                <div class="field-label">Закрыт</div>
                                 <div class="field-value">{{ datetimes.time_closed|date:"d.m.Y H:i" }}</div>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

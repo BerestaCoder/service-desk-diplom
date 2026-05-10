@@ -4,6 +4,6 @@ from servicedesk import views
 urlpatterns = [
     path("", views.main, name='main'),
     path("login", views.login, name='login'),
-    path("ticket/<int:ticket_id>", views.ticket),
+    path("ticket/<int:ticket_id>", views.ticket, name='ticket'),
     path("create-ticket", views.create_ticket, name='create-ticket'),
 ]
