@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Service Desk | Создание заявки</title>
+    <title>Создание заявки</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
         rel="stylesheet">
@@ -17,12 +17,14 @@
     <div class="container">
         <div class="header-nav">
             <div class="logo-area">
-                <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i> Service Desk</h1>
+                <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i>Сервисный центр</h1>
             </div>
             <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
                 <div class="nav-links-mini">
                     <a href="{% url 'main' %}"><i class="fas fa-home"></i> Главная</a>
                     <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
+                    <a href="{% url 'service-list' %}"><i class="fas fa-bell-concierge"></i> Услуги</a>
+                    <a href="{% url 'diagram' %}"><i class="fas fa-chart-column"></i> Отчёты</a>
                 </div>
                 <div class="user-greeting">
                     <i class="fas fa-user-circle"></i>
@@ -37,8 +39,8 @@
                     <div class="header-and-buttons">
                         <h1><i class="fas fa-pen-alt" style="margin-right: 6px;"></i> Создать заявку</h1>
                         <div class="action-buttons">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i>
-                                Зарегистрировать</button>
+                            <button class="btn btn-outline"><i class="fas fa-user"></i> Указать другого инициатора</button>
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Зарегистрировать</button>
                         </div>
                     </div>
                 </div>

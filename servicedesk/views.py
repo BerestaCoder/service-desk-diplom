@@ -1,18 +1,50 @@
-from collections import namedtuple
 from .models import Ticket, Service, User
-from .forms import TicketForm
+from .forms import *
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.utils import timezone
+from datetime import datetime
+import plotly.express as px
+import pandas as pd
+from datetime import datetime
+import calendar
+from django.db.models import Count, Q
+from django.db.models.functions import TruncMonth
 
 def login(request):
     return render(request, "login.html")
+
+def error(request):
+    return render(request, "404.html")
+
+def main(request):
+    tickets = Ticket.objects.all().order_by('-id') #[:20]
+    
+    data = {
+        "tickets": tickets,
+        "summary": tickets.count(),
+    }
+
+    return render(request, "main.html", data)
 
 def ticket(request, ticket_id):
     try:
         tic = Ticket.objects.get(id=ticket_id)
     except Ticket.DoesNotExist:
         return render(request, "404.html", {"message": "Тикет не найден"}, status=404)
+
+    forms = []
+    match tic.stage:
+        case 0:
+            forms.append(ChangeServiceForm())
+            forms.append(ApproveServiceForm())
+        case 1:
+            forms.append(AssignResponsibleForm())
+            forms.append(TakeResponsibilityForm())
+        case 2:
+            forms.append(ChangeResponsibleForm())
+            forms.append(CompleteForm())
+        case 3:
+            forms.append(CloseForm())
 
     tags = {
         "stage": tic.stage,
@@ -57,6 +89,7 @@ def ticket(request, ticket_id):
         datetimes[field.replace('datetime_', 'time_')] = value
 
     data = {
+        "ticket_id": tic.id,
         "ticket_code": f"{tic.fk_service.get_service_type_display()}-{tic.id}",
         "tags": tags,
         "description": description,
@@ -64,18 +97,77 @@ def ticket(request, ticket_id):
         "responsible": responsible,
         "datetimes": datetimes,
         'current_datetime': timezone.now(),
+        'forms': forms
     }
     return render(request, "ticket.html", data)
 
-def main(request):
-    tickets = Ticket.objects.all().order_by('-id') #[:20]
+def ticket_change_service(request, ticket_id):
+    try:
+        ticket = Ticket.objects.get(id=ticket_id)
+    except Ticket.DoesNotExist:
+        return render(request, "404.html", {"message": "Тикет не найден"}, status=404)
+    
+    if request.method == "POST":
+        form = ChangeServiceForm(request.POST)
+        if form.is_valid():
+            ticket.fk_service = form.cleaned_data['service']
+            ticket.save()
+            return redirect('ticket', ticket_id=ticket_id)
+    else:
+        form = ChangeServiceForm(initial={'service': ticket.fk_service})
+    return redirect('ticket', ticket_id=ticket_id)
+
+def ticket_approve_service(request, ticket_id):
+    if request.method == "POST":
+        return redirect('ticket', ticket_id=ticket_id)
+    
+    return redirect('main')
+
+def ticket_assign_responsible(request, ticket_id):
+    if request.method == "POST":
+        return redirect('ticket', ticket_id=ticket_id)
+    
+    return redirect('main')
+
+def ticket_take_responsibility(request, ticket_id):
+    if request.method == "POST":
+        return redirect('ticket', ticket_id=ticket_id)
+    
+    return redirect('main')
+
+def ticket_change_responsible(request, ticket_id):
+    if request.method == "POST":
+        return redirect('ticket', ticket_id=ticket_id)
+    
+    return redirect('main')
+
+def ticket_complete(request, ticket_id):
+    if request.method == "POST":
+        return redirect('ticket', ticket_id=ticket_id)
+    
+    return redirect('main')
+
+def ticket_close(request, ticket_id):
+    if request.method == "POST":
+        return redirect('ticket', ticket_id=ticket_id)
+    
+    return redirect('main')
+
+def service_list(request):
+    services = Service.objects.all()
     
     data = {
-        "tickets": tickets,
-        "summary": tickets.count(),
+        "services": services,
     }
 
-    return render(request, "main.html", data)
+    return render(request, "service-list.html", data)
+
+def service(request, service_id):
+    try:
+        service = Service.objects.get(id=service_id)
+    except Ticket.DoesNotExist:
+        return render(request, "404.html", {"message": "Услуга не найдена"}, status=404)
+    return render(request, "service.html", {"service": service })
 
 def create_ticket(request):
     if request.method == "POST":
@@ -102,4 +194,109 @@ def create_ticket(request):
 
     else:
         ticketform = TicketForm()
-        return render(request, "create-ticket.html", {"form": ticketform})
+        data = {"form": ticketform}
+        return render(request, "create-ticket.html", data)
+
+def diagram(request):
+    tickets_query = Ticket.objects.all()
+    
+    date_from = request.GET.get('start')
+    date_to = request.GET.get('end')
+    service_type = request.GET.get('service_type')
+    service_id = request.GET.get('service')
+    
+    if date_from:
+        try:
+            date_from_parsed = datetime.strptime(date_from, '%Y-%m-%d')
+            tickets_query = tickets_query.filter(datetime_registered__gte=date_from_parsed)
+        except ValueError:
+            pass
+    
+    if date_to:
+        try:
+            date_to_parsed = datetime.strptime(date_to, '%Y-%m-%d')
+            tickets_query = tickets_query.filter(datetime_registered__lte=date_to_parsed)
+        except ValueError:
+            pass
+    
+    if service_id and service_id != 'all':
+        try:
+            service_id_int = int(service_id)
+            tickets_query = tickets_query.filter(fk_service_id=service_id_int)
+        except ValueError:
+            pass
+ 
+    if service_type and service_type != 'all':
+        try:
+            service_type_int = int(service_type)
+            tickets_query = tickets_query.filter(fk_service__service_type=service_type_int)
+        except (ValueError, TypeError):
+            pass
+    
+    tickets_by_month_service = tickets_query.annotate(
+        month=TruncMonth('datetime_registered')
+    ).values(
+        'month', 'fk_service__name'
+    ).annotate(
+        count=Count('id')
+    ).order_by('month', 'fk_service__name')
+    
+    data = []
+    for item in tickets_by_month_service:
+        if item['month']:
+            months_ru = {
+                1: 'Янв', 2: 'Фев', 3: 'Мар', 4: 'Апр', 5: 'Май', 6: 'Июн',
+                7: 'Июл', 8: 'Авг', 9: 'Сен', 10: 'Окт', 11: 'Ноя', 12: 'Дек'
+            }
+            month_name = months_ru[item['month'].month]
+            service_name = item['fk_service__name'] if item['fk_service__name'] else 'Без названия'
+            
+            data.append({
+                'Месяц': month_name,
+                'Порядок': item['month'],
+                'Услуга': service_name,
+                'Количество заявок': item['count'],
+            })
+    
+    df_long = pd.DataFrame(data)
+    
+    if df_long.empty:
+        fig = px.bar(title='Нет данных за выбранный период')
+        fig.update_layout(width=800, height=500, margin=dict(t=50, l=50, r=50, b=50))
+    else:
+        df_wide = df_long.pivot(index=['Месяц', 'Порядок'], 
+                                 columns='Услуга', 
+                                 values='Количество заявок').reset_index()
+        
+        df_wide = df_wide.fillna(0)
+        df_wide = df_wide.sort_values('Порядок')
+        unique_months = df_wide['Месяц'].tolist()
+        
+        fig = px.bar(
+            df_wide,
+            x='Месяц',
+            y=[col for col in df_wide.columns if col not in ['Месяц', 'Порядок']],
+            category_orders={'Месяц': unique_months},
+            labels={'value': 'Количество заявок', 'variable': 'Услуга'}
+        )
+        
+        fig.update_layout(
+            width=800,
+            height=500,
+            margin=dict(t=50, l=50, r=50, b=50),
+            xaxis_title="Месяц",
+            yaxis_title="Количество заявок",
+            legend_title="Услуга",
+            template='plotly_white'
+        )
+    
+    chart = fig.to_html(full_html=False)
+    
+    form = DiagramForm(initial={
+        'start': date_from if date_from else '',
+        'end': date_to if date_to else '',
+        'service': service_id if service_id else 'all',
+        'service_type': service_type if service_type else 'all'
+    })
+    
+    return render(request, "diagram.html", {"chart": chart, "form": form})

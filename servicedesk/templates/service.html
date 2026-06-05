@@ -4,14 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Ошибка 404</title>
-    <!-- Google Fonts для современного и чистого стиля -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 (бесплатные иконки) -->
+    <title>{{ ticket_code }}</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static "css/styles.css" %}" />
 </head>
-<body>
 <body>
     <div class="container">
         <div class="header-nav">
@@ -32,17 +29,35 @@
                 </div>
             </div>
         </div>
+        <!-- Заголовок тикета -->
         <div class="main-container">
             <div class="main-container-header">
                 <div class="header-and-buttons">
-                    <h1><i class="fas fa-exclamation-triangle" style="margin-right: 6px;"></i> Ошибка 404</h1>
+                    <h1><i class="fas fa-ticket-alt" style="margin-right: 6px;"></i> {{ service.name  }}</h1>
                     <div class="action-buttons">
+                        <button class="btn btn-outline"><i class="fas fa-user-plus"></i> Удалить</button>
+                        <button class="btn btn-primary"><i class="fas fa-user-check"></i> Изменить</button>
                     </div>
                 </div>
             </div>
             <div class="main-body">
                 <div class="center-container">
-                    Данная страница не найдена
+                    <!-- Описание -->
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-align-left"></i> Описание
+                        </div>
+                        <div class="card-content">
+                            <div class="field-row">
+                                <div class="field-label">Тип услуги</div>
+                                <div class="field-value">{{ service.get_service_type_display }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Название</div>
+                                <div class="field-value">{{ service.name }}</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

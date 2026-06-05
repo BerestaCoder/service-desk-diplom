@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Главная страница</title>
+    <title>Услуги</title>
     <!-- Google Fonts и базовые стили -->
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
@@ -37,9 +37,9 @@
         <div class="main-container">
             <div class="main-container-header">
                 <div class="header-and-buttons">
-                    <h1><i class="fas fa-house" style="margin-right: 6px;"></i> Главная</h1>
+                    <h1><i class="fas fa-bell-concierge" style="margin-right: 6px;"></i> Услуги</h1>
                     <div class="action-buttons">
-                        <button class="btn btn-outline"><i class="fas fa-filter"></i> Установить фильтры</button>
+                        <button class="btn btn-primary"><i class="fas fa-pen"></i> Создать услугу</button>
                     </div>
                 </div>
             </div>
@@ -47,50 +47,22 @@
                 <div class="center-container">
                     <div class="info-card">
                         <div class="card-header">
-                            <i class="fas fa-ticket-alt"></i> Заявки
+                            
                         </div>
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Код</th>
-                                    <th>Приоритет</th>
-                                    <th>Этап</th>
-                                    <th>Услуга</th>
-                                    <th>Заявитель</th>
-                                    <th>Срок</th>
-                                    <th>Ответственный</th>
+                                    <th>Номер</th>
+                                    <th>Тип</th>
+                                    <th>Название</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for ticket in tickets %}
-                                <tr class="clickable-row" data-href="/ticket/{{ ticket.id }}">
-                                    <td>{{ ticket.fk_service.get_service_type_display }}-{{ ticket.id }}</td>
-                                    <td>
-                                        {% if ticket.priority == 0 %}
-                                        <div class="table-tag tag-priority-low"><i class="fas fa-arrow-down"></i></div>
-                                        {% elif ticket.priority == 1 %}
-                                        <div class="table-tag tag-priority-medium"><i class="fas fa-minus"></i></div>
-                                        {% elif ticket.priority == 2 %}
-                                        <div class="table-tag tag-priority-high"><i class="fas fa-arrow-up"></i></div>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if ticket.stage == 0 %}
-                                        <div class="table-tag tag-stage">Новое</div>
-                                        {% elif ticket.stage == 1 %}
-                                        <div class="table-tag tag-stage">Класс.</div>
-                                        {% elif ticket.stage == 2 %}
-                                        <div class="table-tag tag-stage">Назнач.</div>
-                                        {% elif ticket.stage == 3 %}
-                                        <div class="table-tag tag-stage">Решён</div>
-                                        {% elif ticket.stage == 4 %}
-                                        <div class="table-tag tag-stage">Закрыт</div>
-                                        {% endif %}
-                                    </td>
-                                    <td class="wrap-text">{{ ticket.fk_service.name }}</td>
-                                    <td>{{ ticket.fk_initiator.shortname }}</td>
-                                    <td>{{ ticket.datetime_deadlinne|date:"d.m.Y H:i" }}</td>
-                                    <td>{{ ticket.fk_responsible.shortname }}</td>
+                                {% for service in services %}
+                                <tr class="clickable-row" data-href="/service/{{ service.id }}">
+                                    <td>{{ service.id }}</td>
+                                    <td>{{ service.get_service_type_display }}</td>
+                                    <td class="wrap-text">{{ service.name }}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>
