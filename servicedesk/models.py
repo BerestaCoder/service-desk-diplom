@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import models
 from django.core.validators import RegexValidator
 
@@ -8,9 +9,16 @@ class Service(models.Model):
         (2, 'PRB'),
         (3, 'CHG'),
     ]
+    PRIORITIES = [
+        (0, 'Низкий'),
+        (1, 'Средний'),
+        (2, 'Высокий'),
+    ]
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     service_type = models.IntegerField(choices=SERVICE_TYPES, default=0)
+    default_priority = models.IntegerField(choices=PRIORITIES, default=0)
+    default_time_to_solve = models.DurationField(default=timedelta(days=1))
 
 class Department(models.Model):
     id = models.AutoField(primary_key=True)
@@ -41,7 +49,7 @@ class User(models.Model):
 class Ticket(models.Model):
     STAGES = [
         (0, 'Новое'),
-        (1, 'Классифицируется'),
+        (1, 'Классифицирован'),
         (2, 'Назначен'),
         (3, 'Решён'),
         (4, 'Закрыт'),

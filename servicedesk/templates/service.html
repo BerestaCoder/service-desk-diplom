@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{% load static %}
+{% load static service_filters%}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -11,32 +11,15 @@
 </head>
 <body>
     <div class="container">
-        <div class="header-nav">
-            <div class="logo-area">
-                <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i>Сервисный центр</h1>
-            </div>
-            <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
-                <div class="nav-links-mini">
-                    <a href="{% url 'main' %}"><i class="fas fa-home"></i> Главная</a>
-                    <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
-                    <a href="{% url 'service-list' %}"><i class="fas fa-bell-concierge"></i> Услуги</a>
-                    <a href="{% url 'diagram' %}"><i class="fas fa-chart-column"></i> Отчёты</a>
-                </div>
-                <div class="user-greeting">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Иванов И.И.</span>
-                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
-                </div>
-            </div>
-        </div>
+        {% include 'includes/header.html' %}
         <!-- Заголовок тикета -->
         <div class="main-container">
             <div class="main-container-header">
                 <div class="header-and-buttons">
-                    <h1><i class="fas fa-ticket-alt" style="margin-right: 6px;"></i> {{ service.name  }}</h1>
+                    <h1> {{ service.name  }}</h1>
                     <div class="action-buttons">
-                        <button class="btn btn-outline"><i class="fas fa-user-plus"></i> Удалить</button>
-                        <button class="btn btn-primary"><i class="fas fa-user-check"></i> Изменить</button>
+                        <button class="btn btn-outline">Удалить</button>
+                        <button class="btn btn-primary">Изменить</button>
                     </div>
                 </div>
             </div>
@@ -49,12 +32,16 @@
                         </div>
                         <div class="card-content">
                             <div class="field-row">
-                                <div class="field-label">Тип услуги</div>
+                                <div class="field-label" style="width: 300px;">Тип услуги</div>
                                 <div class="field-value">{{ service.get_service_type_display }}</div>
                             </div>
                             <div class="field-row">
-                                <div class="field-label">Название</div>
-                                <div class="field-value">{{ service.name }}</div>
+                                <div class="field-label" style="width: 300px;">Рекомендованный приоритет</div>
+                                <div class="field-value">{{ service.get_default_priority_display }}</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label" style="width: 300px;">Рекомендованное время на решение</div>
+                                <div class="field-value">{{ service.default_time_to_solve|brief_timedelta  }}</div>
                             </div>
                         </div>
                     </div>

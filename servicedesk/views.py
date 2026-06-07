@@ -5,7 +5,7 @@ from django.utils import timezone
 from datetime import datetime
 import plotly.express as px
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import calendar
 from django.db.models import Count, Q
 from django.db.models.functions import TruncMonth
@@ -22,6 +22,7 @@ def main(request):
     data = {
         "tickets": tickets,
         "summary": tickets.count(),
+        "form": TicketListFilterForm()
     }
 
     return render(request, "main.html", data)
@@ -99,6 +100,22 @@ def ticket(request, ticket_id):
         'current_datetime': timezone.now(),
         'forms': forms
     }
+    # тикет диспетчер поддтверждает класс тикета, то в модальном окне появляются рекомендатьельные параметры по дедлайну и приоритету
+    if tic.stage == 0:
+        try:
+            service = Service.objects.get(id=tic.fk_service.id)
+            default_priority = service.default_priority
+            default_time_to_solve = service.default_time_to_solve
+            deadline_date = timezone.now() + default_time_to_solve
+        except Service.DoesNotExist:
+            default_priority = 0
+            default_time_to_solve = timedelta(days=5)
+            deadline_date = timezone.now() + default_time_to_solve
+        
+        data['service_info'] = {
+            "default_priority": default_priority,
+            "default_deadline": deadline_date,
+        }
     return render(request, "ticket.html", data)
 
 def ticket_change_service(request, ticket_id):
@@ -112,16 +129,24 @@ def ticket_change_service(request, ticket_id):
         if form.is_valid():
             ticket.fk_service = form.cleaned_data['service']
             ticket.save()
-            return redirect('ticket', ticket_id=ticket_id)
-    else:
-        form = ChangeServiceForm(initial={'service': ticket.fk_service})
+
     return redirect('ticket', ticket_id=ticket_id)
 
 def ticket_approve_service(request, ticket_id):
-    if request.method == "POST":
-        return redirect('ticket', ticket_id=ticket_id)
+    try:
+        ticket = Ticket.objects.get(id=ticket_id)
+    except Ticket.DoesNotExist:
+        return render(request, "404.html", {"message": "Тикет не найден"}, status=404)
     
-    return redirect('main')
+    if request.method == "POST":
+        form = ApproveServiceForm(request.POST)
+        if form.is_valid():
+            ticket.datetime_deadlinne = form.cleaned_data['deadline']
+            ticket.priority = form.cleaned_data['priority']
+            ticket.stage = 1
+            ticket.save()
+    
+    return redirect('ticket', ticket_id=ticket_id)
 
 def ticket_assign_responsible(request, ticket_id):
     if request.method == "POST":
@@ -175,13 +200,16 @@ def create_ticket(request):
         description = request.POST.get("description")
         
         service = Service.objects.get(id=service_id)
-        user = User.objects.get(id=1)
-            
+        user = User.objects.first()  # В прототипе без системы пользователей используется самый первый пользователь
+        
+        if not user:
+            user = User.objects.create_user(username='temp_user', password='temp')
+        
         ticket = Ticket(
                 stage=0,
-                priority=0,
+                #priority=0,
                 fk_service=service,
-                fk_initiator=user,  # В прототипе без системы пользователей используется самый первый пользователь
+                fk_initiator=user,  
                 fk_responsible=None,
                 description=description,
                 datetime_registered=timezone.now(),
@@ -197,7 +225,23 @@ def create_ticket(request):
         data = {"form": ticketform}
         return render(request, "create-ticket.html", data)
 
-def diagram(request):
+def reports_default(request):
+    return redirect('reports', type='chart_one')
+
+def reports(request, type):
+    match type:
+        case "chart_one":
+            return _chart_one(request)
+        case "chart_two":
+            return _chart_two(request)
+        case "chart_three":
+            return _chart_three(request)
+        case "chart_four":
+            return _chart_four(request)
+        case _:
+            return render(request, "404.html", {"message": "Отчёт не найден"}, status=404)
+
+def _chart_one(request):
     tickets_query = Ticket.objects.all()
     
     date_from = request.GET.get('start')
@@ -299,4 +343,13 @@ def diagram(request):
         'service_type': service_type if service_type else 'all'
     })
     
-    return render(request, "diagram.html", {"chart": chart, "form": form})
+    return render(request, "reports.html", {"chart": chart, "form": form})
+
+def _chart_two(request):
+    return "Error 2"
+
+def _chart_three(request):
+    return "Error 3"
+
+def _chart_four(request):
+    return "Error 4"

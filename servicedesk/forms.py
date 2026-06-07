@@ -127,3 +127,68 @@ class CompleteForm(forms.Form):
 class CloseForm(forms.Form):
     closing_comment = forms.CharField(widget=forms.Textarea, label='Заключительный комментарий')
     rating = forms.IntegerField(widget=forms.NumberInput(attrs={'min': 1, 'max': 5}), label='Оценка качества (1-5)')
+
+class TicketListFilterForm(forms.Form):
+    overdue = forms.ChoiceField(
+        choices=[
+            (0, 'Все'),
+            (1, 'Только просроченные'),
+            (2, 'Кроме просроченных')
+            ],
+        label="Тип"
+    )
+    priority = forms.ChoiceField(
+        choices=[
+            (0, 'Низкий'),
+            (1, 'Средний'),
+            (2, 'Высокий')
+            ],
+        label="Приоритет"
+    )
+    start_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), label='Начиная с')
+    end_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), label='Заканчивая до')
+    service_type = forms.ChoiceField(
+        choices=[
+            (0, 'INC'),
+            (1, 'REQ'),
+            (2, 'PRB'),
+            (3, 'CHG'),
+        ],
+        label="Тип услуги"
+    )
+    service = forms.ChoiceField(choices=[],label="Тип услуги")
+    stage = forms.ChoiceField(
+        choices=[
+            (0, 'Новое'),
+            (1, 'Классифицирован'),
+            (2, 'Назначен'),
+            (3, 'Решён'),
+            (4, 'Закрыт'),
+        ],
+        label="Тип услуги"
+    )
+    initiator = forms.ChoiceField(choices=[],label="Заявитель")
+    responsible = forms.ChoiceField(choices=[],label="Ответственный")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        services = Service.objects.all().order_by('id')
+        choices = [(service.id, service.name) for service in services]
+        self.fields['service'].choices = choices
+
+        users = User.objects.all().order_by('id')
+        choices = [(user.id, user.shortname) for user in users]
+        self.fields['initiator'].choices = choices
+        self.fields['responsible'].choices = choices
+
+class ReportForm(forms.Form):
+    type = forms.ChoiceField(
+        choices=[
+            (0, 'Количество заявок по месяцам'),
+            (1, 'Сводка о сотруднике ИТ-отдела'),
+            (2, 'Среднее время выполнения заявок'),
+            (4, 'Соблюдение SLA (просроченные vs выполненные в срок)'),
+            ],
+        label="Тип"
+    )

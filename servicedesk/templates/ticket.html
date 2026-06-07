@@ -10,149 +10,11 @@
         href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{% static "css/styles.css" %}" />
-    <style>
-        /* Стили для модальных окон */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.3s;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto;
-            padding: 0;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.3s;
-        }
-
-        .modal-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid #edf2f8;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-
-        .close {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .close:hover {
-            color: #000;
-        }
-
-        .modal-body {
-            padding: 24px;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-
-        .modal-footer {
-            padding: 16px 24px;
-            border-top: 1px solid #edf2f8;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: inherit;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-    </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="header-nav">
-            <div class="logo-area">
-                <h1><i class="fas fa-headset" style="margin-right: 10px; color: #3b82f6;"></i>Сервисный центр</h1>
-            </div>
-            <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap;">
-                <div class="nav-links-mini">
-                    <a href="{% url 'main' %}"><i class="fas fa-home"></i> Главная</a>
-                    <a href="{% url 'create-ticket' %}"><i class="fas fa-plus-circle"></i> Создать заявку</a>
-                    <a href="{% url 'service-list' %}"><i class="fas fa-bell-concierge"></i> Услуги</a>
-                    <a href="{% url 'diagram' %}"><i class="fas fa-chart-column"></i> Отчёты</a>
-                </div>
-                <div class="user-greeting">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Иванов И.И.</span>
-                    <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.7;"></i>
-                </div>
-            </div>
-        </div>
+        {% include 'includes/header.html' %}
         <!-- Заголовок тикета -->
         <div class="main-container">
             <div class="main-container-header">
@@ -190,27 +52,20 @@
                 {% if tags.stage == 0 %}
                 <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Новое</h2>
                 {% elif tags.stage == 1 %}
-                <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Классифицирован
-                </h2>
+                <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Классифицирован</h2>
                 {% elif tags.stage == 2 %}
                 <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Назначен</h2>
                 {% elif tags.stage == 3 %}
-                <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Диагностирован
-                </h2>
-                {% elif tags.stage == 4 %}
                 <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Решён</h2>
-                {% elif tags.stage == 5 %}
+                {% elif tags.stage == 4 %}
                 <h2 class="tag tag-stage"><i class="fas fa-dot-circle" style="margin-right: 6px;"></i>Закрыт</h2>
                 {% endif %}
                 {% if tags.priority == 0 %}
-                <h2 class="tag tag-priority-low"><i class="fas fa-flag" style="margin-right: 6px;"></i>Низкий приоритет
-                </h2>
+                <h2 class="tag tag-priority-low"><i class="fas fa-flag" style="margin-right: 6px;"></i>Низкий приоритет</h2>
                 {% elif tags.priority == 1 %}
-                <h2 class="tag tag-priority-medium"><i class="fas fa-flag" style="margin-right: 6px;"></i>Средний
-                    приоритет</h2>
+                <h2 class="tag tag-priority-medium"><i class="fas fa-flag" style="margin-right: 6px;"></i>Средний приоритет</h2>
                 {% elif tags.priority == 2 %}
-                <h2 class="tag tag-priority-high"><i class="fas fa-flag" style="margin-right: 6px;"></i>Высокий
-                    приоритет</h2>
+                <h2 class="tag tag-priority-high"><i class="fas fa-flag" style="margin-right: 6px;"></i>Высокий приоритет</h2>
                 {% endif %}
                 {% if datetimes.time_deadlinne %}
                 <h2 class="tag tag-stage"><i class="fas fa-clock" style="margin-right: 6px;"></i>Срок {{ datetimes.time_deadlinne|date:"d.m.Y H:i" }}</h2>
@@ -262,6 +117,21 @@
                             <div class="field-row">
                                 <div class="field-label">Сообщение</div>
                                 <div class="field-value">{{ description.message }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="card-header">
+                            <i class="fas fa-align-left"></i> Решение
+                        </div>
+                        <div class="card-content">
+                            <div class="field-row">
+                                <div class="field-label">Код</div>
+                                <div class="field-value">Решено</div>
+                            </div>
+                            <div class="field-row">
+                                <div class="field-label">Сообщение</div>
+                                <div class="field-value">Установлен правильный логин пользователя в информационной базе. Произведён вход в систему с корректными данными. Доступ работает штатно.</div>
                             </div>
                         </div>
                     </div>
@@ -389,16 +259,35 @@
                     <i class="fas fa-hand-paper"></i> Взять ответственность
                     {% elif tags.stage == 2 %}
                     <h3><i class="fas fa-check-double"></i> Завершить заявку
-                    {% elif tags.stage == 3 %}
-                    <i class="fas fa-lock"></i> Закрыть заявку
-                    {% endif %}
-                </h3>
-                <span class="close" onclick="closeModal('secondModal')">&times;</span>
+                        {% elif tags.stage == 3 %}
+                        <i class="fas fa-lock"></i> Закрыть заявку
+                        {% endif %}
+                    </h3>
+                    <span class="close" onclick="closeModal('secondModal')">&times;</span>
             </div>
-            <form method="post" action="{% url 'main' %}">
+            <form method="post" action="{% url 'approve-service' ticket_id=ticket_id %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="form-group">
+                        {% if service_info %}
+                        <div class="service-info-block">
+                            <h2></i> Рекомендации</h2>
+                            <p>
+                                <strong>Приоритет:</strong>
+                                {% if service_info.default_priority == 0 %}
+                                <span class="tag tag-priority-low">Низкий</span>
+                                {% elif service_info.default_priority == 1 %}
+                                <span class="tag tag-priority-medium">Средний</span>
+                                {% elif service_info.default_priority == 2 %}
+                                <span class="tag tag-priority-high">Высокий</span>
+                                {% endif %}
+                            </p>
+                            <p>
+                                <strong>Дедлайн:</strong>
+                                {{ service_info.default_deadline|date:"d.m.Y H:i" }}
+                            </p>
+                        </div>
+                        {% endif %}
                         {{ forms.1 }}
                         {% if tags.stage == 1 %}
                         Вы хотите взять на себя ответственность?

@@ -7,7 +7,8 @@ urlpatterns = [
     path("create-ticket", views.create_ticket, name='create-ticket'),
     path("services", views.service_list, name='service-list'),
     path("service/<int:service_id>", views.service, name='service'),
-    path("diagram", views.diagram, name='diagram'),
+    path("reports/", views.reports_default, name='reports_default'),
+    path("reports/<str:type>", views.reports, name='reports'),  
 
     path("ticket/<int:ticket_id>", views.ticket, name='ticket'),
     path('ticket/<int:ticket_id>/change-service/', views.ticket_change_service, name='change-service'),
